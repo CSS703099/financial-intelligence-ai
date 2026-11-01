@@ -16,6 +16,7 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 | Exercício 03 — análise por restaurante | Aprovado 10/10 | `sql/03_exercicio.sql` |
 | Exercício 04 — CTE e prioridade | Aprovado 10/10 | `sql/04_exercicio.sql` |
 | Exercício 05 — evolução mensal e `LAG()` | Aprovado 10/10 | `sql/05_exercicio.sql` |
+| Exercício 06 — ranking e Pareto | Aprovado 10/10 | `sql/06_exercicio.sql` |
 
 ## Problema de negócio
 
@@ -39,6 +40,7 @@ Divergência positiva indica que o repasse realizado ficou abaixo do esperado pe
 - **Exercício 03:** Restaurante B lidera em divergências absolutas (R$ 27,40), seguido de A (R$ 6,20) e C (R$ 4,50).
 - **Exercício 04:** taxas de divergência por restaurante: B 41,67% (Alta), A 16,67% (Media), C 8,33% (Baixa). Classificação exclusivamente didática.
 - **Exercício 05:** setembro/2026 — 18 pedidos, 4 divergentes, taxa de 22,22%, R$ 24,40 absolutos; outubro/2026 — 12 pedidos, 3 divergentes, taxa de 25,00%, R$ 13,70 absolutos. A taxa aumentou **2,78 pontos percentuais**; o valor absoluto das diferenças diminuiu.
+- **Exercício 06:** ranking de 7 pedidos divergentes; os 5 de maior magnitude somam **R$ 32,60**, ou **85,56%** do total absoluto de **R$ 38,10** (análise de Pareto didática).
 
 ## Como executar
 
@@ -54,6 +56,7 @@ py -3.13 scripts/executar_sql.py sql/02_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/03_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/04_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/05_exercicio.sql
+py -3.13 scripts/executar_sql.py sql/06_exercicio.sql
 ```
 
 Se não utiliza o Python Launcher do Windows, substitua `py -3.13` por `python`.
@@ -72,6 +75,7 @@ sql/02_exercicio.sql
 sql/03_exercicio.sql
 sql/04_exercicio.sql
 sql/05_exercicio.sql
+sql/06_exercicio.sql
 docs/diario_de_bordo.md
 .gitignore
 ```
