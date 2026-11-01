@@ -16,6 +16,7 @@
 - [x] Exercicio 06 — Ranking de divergencias e Pareto com funcoes de janela, nota **10/10**.
 - [x] Exercicio 07 — Deteccao por regras e alertas financeiros, nota **10/10**.
 - [x] Exercicio 08 — Painel executivo de risco por restaurante, nota **10/10**.
+- [x] Exercicio 09 — Controles de qualidade e consistencia financeira, nota **10/10**.
 
 ### Exercicio 01 — Indicadores dos pedidos concluidos
 - Quantidade de pedidos concluidos: **30**.
@@ -39,7 +40,7 @@
 Divergencia financeira nao comprova fraude, falha ou prejuizo. O modelo de repasse e simplificado e os registros sao artificiais. Repasse ao restaurante nao equivale a lucro.
 
 ### Proxima atividade
-Exercicios 01 a 08 concluidos e aprovados. Exercicio 09 ainda nao iniciado.
+Exercicios 01 a 09 concluidos e aprovados. Exercicio 10 ainda nao iniciado.
 
 ### Validacao do ambiente Git / GitHub — 2026-11-01
 
@@ -177,4 +178,26 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Seguranca e escopo:** todos os registros sao ficticios; as regras nao comprovam fraude nem autorizam acoes financeiras automaticas. O painel ainda nao e uma interface visual interativa.
 
-**Estado:** Exercicio 08 aprovado, publicado e documentado. Exercicio 09 nao iniciado.
+**Estado naquela etapa:** Exercicio 08 aprovado, publicado e documentado; Exercicio 09 concluido posteriormente.
+
+### Exercicio 09 — Controles de qualidade e consistencia financeira (aprovado, 10/10)
+
+- **Arquivo:** `sql/09_exercicio.sql`, publicado na branch `main` do repositorio privado.
+- **Commit do aluno:** `e86a2dc` — `feat(sql): concluir exercicio 09 com controles de qualidade`.
+- **Execucao local confirmada pelo aluno:** 6 linhas e 5 colunas com a base original de 36 pedidos sinteticos.
+- **Competencias:** `UNION ALL`, CTEs, `COUNT(*) - COUNT(DISTINCT pedido_id)`, `IS NULL`, `NOT IN`, validacao de dominios e sinais monetarios, regras de cancelamento, conciliacao de repasses, `CASE WHEN` e ordenacao pela gravidade.
+
+| Controle | Categoria | Ocorrencias | Situacao | Acao sugerida |
+|---|---|---:|---|---|
+| DIVERGENCIA_REPASSE | Financeiro | 7 | Revisar | Investigar repasses |
+| CAMPO_OBRIGATORIO | Qualidade | 0 | OK | Sem acao |
+| CANCELADO_MOVIMENTADO | Qualidade | 0 | OK | Sem acao |
+| ID_DUPLICADO | Qualidade | 0 | OK | Sem acao |
+| STATUS_INVALIDO | Qualidade | 0 | OK | Sem acao |
+| VALOR_NEGATIVO | Qualidade | 0 | OK | Sem acao |
+
+**Aprendizado e correcao:** a primeira execucao apresentou `sqlite3.OperationalError: no such column: pedido_id` porque a consulta do controle `ID_DUPLICADO` nao possuia `FROM pedidos`. O aluno identificou e corrigiu a ausencia da clausula, reexecutou com sucesso e recebeu nota definitiva **10/10**.
+
+**Interpretacao:** 5 controles de qualidade estao em `OK` nesta base; a unica verificacao com ocorrencias e de natureza financeira (`Revisar`), com 7 repasses divergentes. Isso nao comprova falha de cadastro, fraude ou prejuizo. A chave primaria `pedido_id` e os `CHECK` do schema ja restringem alguns erros na tabela original; os controles sao uteis para validacao e auditoria.
+
+**Progresso:** 9 de 12 exercicios aprovados na trilha SQL proposta, com media de **9,89/10**. Exercicio 10 nao iniciado.
