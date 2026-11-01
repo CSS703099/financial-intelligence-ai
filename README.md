@@ -26,6 +26,23 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 
 **Etapa SQL inicial encerrada em 2026-11-01:** **12 de 12 exercícios aprovados**, média final **9,92/10** (11 exercícios com nota 10 e o exercício 01 com nota 9). Código SQL e auditoria final publicados no repositório privado.
 
+## Sprint MVP — iFood GenAI (novembro/2026)
+
+**Objetivo:** preparar até **12/11/2026** uma demonstração funcional de portfólio para a candidatura pretendida até **13/11/2026** (prazo informado: **17/11/2026**). Datas de planejamento, não promessa de implantação. O projeto é **independente**, não utiliza dados ou sistemas internos do iFood.
+
+| Entrega do sprint | Situação | Evidência |
+|---|---|---|
+| SQL — 12 exercícios e auditoria | Concluído | `sql/12_exercicio.sql`, `sql/12_auditoria.sql` |
+| Python 01 — indicadores via SQLite | **Aprovado 10/10 e publicado** | `scripts/indicadores_financeiros.py` |
+| Pandas e testes automatizados | Planejado | Ainda não implementado |
+| Dashboard interativo e simulações | Planejado | Ainda não implementado |
+| IA generativa com avaliação e revisão humana | Planejado, dependente de testes | Ainda não implementada |
+| Demonstração privada | Planejada, sujeita a autorização | Ainda não hospedada |
+
+**Python 01:** função `obter_indicadores()` abre o SQLite em modo somente leitura, executa uma consulta SQL parametrizada pelo estado do banco (sem entrada de parâmetros externos), recupera uma linha com `fetchone()` e devolve um dicionário. **11 de 11 indicadores conferidos** no dataset sintético: 36 pedidos, 30 concluídos, 6 cancelados, faturamento bruto R$ 4.687,60, taxas da plataforma R$ 609,40, taxas logísticas R$ 235,50, repasses R$ 3.820,60, 7 divergentes, diferença líquida R$ 22,10, soma absoluta R$ 38,10 e taxa 23,33%.
+
+**Limitações e melhorias programadas:** os indicadores não abrangem filtros interativos; em base sem pedidos, agregações `SUM()` podem retornar `NULL`; tratar exceções específicas e devolver código de saída diferente de zero em caso de falha; preparar testes de regressão antes do dashboard.
+
 ## Problema de negócio
 
 Em um marketplace fictício, analisar os pedidos efetivamente concluídos, as taxas e os repasses. Modelo de teste:
@@ -78,6 +95,7 @@ py -3.13 scripts/executar_sql.py sql/10_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/11_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/12_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/12_auditoria.sql
+py -3.13 scripts/indicadores_financeiros.py
 ```
 
 Se não utiliza o Python Launcher do Windows, substitua `py -3.13` por `python`.
@@ -104,13 +122,14 @@ sql/10_exercicio.sql
 sql/11_exercicio.sql
 sql/12_exercicio.sql
 sql/12_auditoria.sql
+scripts/indicadores_financeiros.py
 docs/diario_de_bordo.md
 .gitignore
 ```
 
 ## Próximas etapas
 
-**Formação inicial de SQL concluída.** Próxima fase planejada: Python/Pandas para processar os dados sintéticos, automatizar os controles financeiros e adicionar testes repetíveis; posteriormente, interface interativa, prompts avaliados, integração de API e automações de IA com revisão humana. Essas funcionalidades futuras **ainda não estão implementadas**. Para uso profissional, ampliar testes de borda (inclusive ausência total de divergências), padronizar arredondamento por pedido e substituir valores esperados fixos por validações adequadas ao dataset em produção.
+**Formação inicial de SQL concluída; primeira integração Python/SQLite aprovada e publicada.** Próxima entrega: Pandas e testes automatizados; depois, dashboard interativo, simulação financeira, prompts avaliados e integração de IA com revisão humana, apenas se os fluxos mínimos estiverem validados. Essas funcionalidades futuras **ainda não estão implementadas**. Para uso profissional, ampliar testes de borda (inclusive ausência total de divergências), padronizar arredondamento por pedido e substituir valores esperados fixos por validações adequadas ao dataset em produção.
 
 ## Segurança
 
