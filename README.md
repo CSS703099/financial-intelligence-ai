@@ -35,7 +35,8 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 | SQL — 12 exercícios e auditoria | Concluído | `sql/12_exercicio.sql`, `sql/12_auditoria.sql` |
 | Python 01 — indicadores via SQLite | **Aprovado 10/10 e publicado** | `scripts/indicadores_financeiros.py` |
 | Python 02 — Pandas e testes automatizados | **Aprovado 10/10 e publicado** | `scripts/analise_pandas.py`, `tests/test_analise_pandas.py`, `requirements-mvp.txt` |
-| Dashboard interativo e simulações | Planejado | Ainda não implementado |
+| Python 03 — Dashboard Streamlit | **Aprovado 10/10 e publicado** | `app.py`, `scripts/dashboard_dados.py`, `tests/test_dashboard.py`, `.streamlit/config.toml` |
+| Simulador de cenários financeiros | Planejado | Ainda não implementado |
 | IA generativa com avaliação e revisão humana | Planejado, dependente de testes | Ainda não implementada |
 | Demonstração privada | Planejada, sujeita a autorização | Ainda não hospedada |
 
@@ -46,6 +47,8 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 **Python 02:** leitura da tabela `pedidos` via `pd.read_sql_query()` em conexão SQLite somente leitura; implementação independente dos mesmos **11 indicadores** com operações de Pandas em centavos inteiros; separação das funções `carregar_pedidos()` e `calcular_indicadores()`; preservação do DataFrame de entrada; taxa `None` quando não há pedidos concluídos. **5 testes `pytest` passaram** na execução local informada pelo aluno: equivalência SQL/Pandas, base vazia, cenário sem divergências, banco inexistente e preservação do DataFrame. Os **11 indicadores** batem com o CSV sintético original; etapa aprovada **10/10** e publicada no commit `3725d9a`.
 
 **Melhorias para o MVP:** adicionar testes com valores fixos de referência para o CSV, testar falhas com encerramento não zero, validar dados ausentes e tipos monetários antes da interface, além de preparar filtros interativos por período/restaurante.
+
+**Python 03:** dashboard **Streamlit 1.66.1** executado localmente pelo aluno, com filtro inclusivo por período e seleção de restaurantes, cartões financeiros, gráficos de impacto por restaurante e evolução mensal, conciliação por pedido, priorização por regras didáticas e exportação CSV. O painel reutiliza `carregar_pedidos()` e `calcular_indicadores()`; os arquivos `app.py`, `scripts/dashboard_dados.py`, `tests/test_dashboard.py`, `.streamlit/config.toml` e `requirements-mvp.txt` foram publicados no commit **`a192aa9`**, após `git rebase origin/main` e `git push origin main`. **7/7 testes novos e 12/12 testes no total** passaram na execução local informada pelo aluno; a interface foi exibida em `127.0.0.1:8501`, não hospedada externamente. **Avaliação: 10/10.** A conferência manual completa de exportação e filtros adicionais permanece recomendada para a demonstração. **Não há IA integrada.**
 
 ## Problema de negócio
 
@@ -109,6 +112,8 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-mvp.txt
 .\.venv\Scripts\python.exe scripts/analise_pandas.py
 .\.venv\Scripts\python.exe -m pytest tests/test_analise_pandas.py -v
+.\.venv\Scripts\python.exe -m pytest -v
+.\.venv\Scripts\python.exe -m streamlit run app.py --server.address=127.0.0.1 --server.port=8501
 ```
 
 Se não utiliza o Python Launcher do Windows, substitua `py -3.13` por `python`.
@@ -137,7 +142,11 @@ sql/12_exercicio.sql
 sql/12_auditoria.sql
 scripts/indicadores_financeiros.py
 scripts/analise_pandas.py
+scripts/dashboard_dados.py
+app.py
 tests/test_analise_pandas.py
+tests/test_dashboard.py
+.streamlit/config.toml
 requirements-mvp.txt
 docs/diario_de_bordo.md
 .gitignore
@@ -145,7 +154,7 @@ docs/diario_de_bordo.md
 
 ## Próximas etapas
 
-**Formação inicial de SQL concluída; Python 01 e 02 aprovados e publicados.** Próxima entrega: **dashboard interativo Streamlit**, com filtros e indicadores financeiros, seguido de simulação e avaliação de recursos de IA sob revisão humana, se os fluxos mínimos estiverem validados. O dashboard e as funcionalidades de IA **ainda não estão implementados**. Para uso profissional, ampliar testes de borda (inclusive ausência total de divergências), padronizar arredondamento por pedido e substituir valores esperados fixos por validações adequadas ao dataset em produção.
+**Formação inicial de SQL concluída; Python 01, 02 e 03 aprovados e publicados.** O **dashboard Streamlit funciona localmente**, sem hospedagem remota. Próxima entrega: **simulador de cenários financeiros** com dados sintéticos e testes, seguido de eventual IA generativa com avaliações e revisão humana. O simulador, a integração de IA e a implantação privada **ainda não estão implementados**. Para uso profissional, ampliar testes de borda (inclusive ausência total de divergências), padronizar arredondamento por pedido e substituir valores esperados fixos por validações adequadas ao dataset em produção.
 
 ## Segurança
 
