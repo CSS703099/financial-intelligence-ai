@@ -14,6 +14,7 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 | Exercício 01 — indicadores | Aprovado 9/10 | `sql/01_exercicio.sql` |
 | Exercício 02 — conciliação | Aprovado 10/10 | `sql/02_exercicio.sql` |
 | Exercício 03 — análise por restaurante | Aprovado 10/10 | `sql/03_exercicio.sql` |
+| Exercício 04 — CTE e prioridade | Aprovado 10/10 | `sql/04_exercicio.sql` |
 
 ## Problema de negócio
 
@@ -35,6 +36,7 @@ Divergência positiva indica que o repasse realizado ficou abaixo do esperado pe
 - **7** pedidos com diferenças; divergência líquida assinada de **R$ 22,10**.
 - Soma absoluta das diferenças: **R$ 38,10**.
 - **Exercício 03:** Restaurante B lidera em divergências absolutas (R$ 27,40), seguido de A (R$ 6,20) e C (R$ 4,50).
+- **Exercício 04:** taxas de divergência por restaurante: B 41,67% (Alta), A 16,67% (Media), C 8,33% (Baixa). Classificação exclusivamente didática.
 
 ## Como executar
 
@@ -48,6 +50,7 @@ py -3.13 scripts/executar_sql.py sql/00_exploracao.sql
 py -3.13 scripts/executar_sql.py sql/01_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/02_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/03_exercicio.sql
+py -3.13 scripts/executar_sql.py sql/04_exercicio.sql
 ```
 
 Se não utiliza o Python Launcher do Windows, substitua `py -3.13` por `python`.
@@ -64,6 +67,7 @@ sql/00_exploracao.sql
 sql/01_exercicio.sql
 sql/02_exercicio.sql
 sql/03_exercicio.sql
+sql/04_exercicio.sql
 docs/diario_de_bordo.md
 .gitignore
 ```
