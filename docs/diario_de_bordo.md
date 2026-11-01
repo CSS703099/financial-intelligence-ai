@@ -353,4 +353,22 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Progresso rumo ao iFood:** SQL (12/12) e Python 01/02 aprovados e versionados. Proxima entrega prevista: dashboard Streamlit com filtros por periodo/restaurante e metricas verificaveis, visando MVP demonstravel ate **12/11/2026** e candidatura pretendida em **13/11/2026**; prazo limite informado **17/11/2026**. Essas metas sao de planejamento, nao funcionalidades concluidas.
 
-**Status dos proximos recursos:** dashboard, simulacao, IA e hospedagem privada ainda nao implementados.
+**Status após Python 03:** dashboard Streamlit local implementado e publicado; simulacao, IA e hospedagem privada ainda nao implementados (detalhes abaixo).
+
+
+### Sprint MVP — Python 03: dashboard Streamlit (aprovado, 10/10)
+
+- **Commit do aluno publicado em `main`:** `a192aa9` — `feat(dashboard): adicionar painel financeiro Streamlit` (novo SHA após rebase do commit local `fc8cc31`).
+- **Arquivos revisados no GitHub privado:** `app.py`, `scripts/dashboard_dados.py`, `tests/test_dashboard.py`, `.streamlit/config.toml` e `requirements-mvp.txt` (acrescentado `streamlit==1.66.1`).
+- **Execucao local confirmada pelo aluno:** dashboard acessado em `http://127.0.0.1:8501` e captura da interface dark fornecida. Indicadores exibidos no filtro total: 36 pedidos, 30 concluidos, 7 divergentes, taxa 23,33%, faturamento R$ 4.687,60, divergencia absoluta R$ 38,10 e liquida R$ 22,10.
+- **Teste local informado pelo aluno:** `pytest tests/test_dashboard.py -v` com **7 passed in 3.12s**; `pytest -v` com **12 passed in 2.61s**, somando os cinco testes Pandas e os sete do dashboard.
+- **Componentes implementados:** filtros de data inclusivos e restaurante; sete cartoes, grafico de impacto absoluto por restaurante, evolucao mensal, tabela de conciliacao dos pedidos concluidos, download de CSV e ranking por regras de gravidade didaticas.
+- **Competencias:** Streamlit (`st.metric`, `st.date_input`, `st.multiselect`, `st.tabs`, graficos, `st.dataframe`, `st.download_button`), separacao de interface e transformacoes Pandas testaveis e `AppTest` para smoke tests da interface.
+
+**Verificacoes ainda recomendadas:** confirmar manualmente filtros de outubro e Restaurante B, exportacao CSV, comportamento sem restaurantes selecionados e possivel traducao automatica do navegador que truncou rotulos na captura. Esses itens nao foram todos comprovados visualmente; os testes automatizados ja cobrem filtro do Restaurante B e cenarios sem resultados.
+
+**Controle Git:** houve rejeicao inicial do `git push` porque o remoto continha dois commits de documentacao; o aluno executou `git fetch origin`, `git rebase origin/main` sem conflitos e `git push origin main` com sucesso. `git status` confirmou `main` atualizada; `sql/11_plano.sql` continua nao rastreado intencionalmente.
+
+**Limites honestos do prototipo:** base ficticia, sem acesso a operacoes reais, sem IA integrada, sem simulador de cenarios, sem hospedagem externa. Um link local `127.0.0.1` nao e acessivel por recrutadores.
+
+**Proximo sprint planejado:** Python 04 — simulador de cenarios financeiros com testes e integracao ao dashboard, depois avaliacao de IA generativa, com meta interna de MVP demonstravel **12/11/2026** e candidatura pretendida **13/11/2026** (prazo informado **17/11/2026**). Nao iniciar nova etapa sem solicitacao do aluno.
