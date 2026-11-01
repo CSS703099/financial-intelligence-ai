@@ -11,6 +11,7 @@
 - [x] Exercicio 01 — Indicadores financeiros, nota **9/10**.
 - [x] Exercicio 02 — Conciliacao financeira, nota **10/10**.
 - [x] Exercicio 03 — Divergencias por restaurante, nota **10/10**.
+- [x] Exercicio 04 — Taxa de divergencia com CTE e classificacao, nota **10/10**.
 
 ### Exercicio 01 — Indicadores dos pedidos concluidos
 - Quantidade de pedidos concluidos: **30**.
@@ -34,7 +35,7 @@
 Divergencia financeira nao comprova fraude, falha ou prejuizo. O modelo de repasse e simplificado e os registros sao artificiais. Repasse ao restaurante nao equivale a lucro.
 
 ### Proxima atividade
-Exercicio 03 — concluido e aprovado. Exercicio 04 ainda nao iniciado.
+Exercicios 01 a 04 concluidos e aprovados. Exercicio 05 ainda nao iniciado.
 
 ### Validacao do ambiente Git / GitHub — 2026-11-01
 
@@ -67,4 +68,24 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Interpretacao:** Restaurante B concentra o maior volume de divergencias absolutas (R$ 27,40), merecendo prioridade de verificacao. A base e ficticia e divergencias nao comprovam erro ou fraude.
 
-**Estado:** Exercicio 03 aprovado e encerrado. Exercicio 04 nao iniciado.
+**Estado naquele momento:** Exercicio 03 aprovado; Exercicio 04 foi concluido posteriormente (detalhes abaixo).
+
+### Exercicio 04 — Taxa de divergencia e classificacao (aprovado, 10/10)
+
+- **Arquivo:** `sql/04_exercicio.sql`.
+- **Commit do aluno:** `4129b01` em `main`, enviado com `git push origin main`.
+- **Execucao local confirmada:** 3 linhas no SQLite, apos recriar o banco local com 36 pedidos sinteticos.
+
+| Restaurante | Pedidos concluidos | Pedidos divergentes | Taxa | Divergencia absoluta (R$) | Prioridade |
+|---|---:|---:|---:|---:|---|
+| Restaurante B | 12 | 5 | 41,67% | 27,40 | Alta |
+| Restaurante A | 6 | 1 | 16,67% | 6,20 | Media |
+| Restaurante C | 12 | 1 | 8,33% | 4,50 | Baixa |
+
+**Competencias demonstradas:** `WITH`/CTE, agregacoes por restaurante, contagem condicional via `SUM(CASE WHEN ...)`, calculo percentual com `100.0` (divisao decimal no SQLite), `ROUND()`, classificacao `CASE WHEN` e ordenacao de indicadores.
+
+**Regra de classificacao (exclusivamente didatica):** Alta a partir de 30%, Media a partir de 15% e abaixo de 30%, Baixa abaixo de 15%. Nao representa indicador oficial ou risco validado de plataforma real.
+
+**Recuperacao do ambiente:** o antigo checkout em pasta sincronizada ao OneDrive apresentou `HEAD` invalido. O usuario preservou uma copia de recuperacao, clonou o repositorio em `C:\\Users\\caion\\Projetos\\financial-intelligence-ai`, restaurou apenas o SQL 04, reproduziu os resultados, configurou a identidade local do Git e publicou o arquivo. O novo checkout passou no teste de sincronizacao `git status -sb`: `## main...origin/main`.
+
+**Estado:** Exercicio 04 aprovado e publicado. Exercicio 05 nao iniciado.
