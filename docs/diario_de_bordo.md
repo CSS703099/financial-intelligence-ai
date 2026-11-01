@@ -17,6 +17,7 @@
 - [x] Exercicio 07 — Deteccao por regras e alertas financeiros, nota **10/10**.
 - [x] Exercicio 08 — Painel executivo de risco por restaurante, nota **10/10**.
 - [x] Exercicio 09 — Controles de qualidade e consistencia financeira, nota **10/10**.
+- [x] Exercicio 10 — Comparacao parametrizada de periodos, nota **10/10**.
 
 ### Exercicio 01 — Indicadores dos pedidos concluidos
 - Quantidade de pedidos concluidos: **30**.
@@ -40,7 +41,7 @@
 Divergencia financeira nao comprova fraude, falha ou prejuizo. O modelo de repasse e simplificado e os registros sao artificiais. Repasse ao restaurante nao equivale a lucro.
 
 ### Proxima atividade
-Exercicios 01 a 09 concluidos e aprovados. Exercicio 10 ainda nao iniciado.
+Exercicios 01 a 10 concluidos e aprovados. Exercicio 11 ainda nao iniciado.
 
 ### Validacao do ambiente Git / GitHub — 2026-11-01
 
@@ -200,4 +201,24 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Interpretacao:** 5 controles de qualidade estao em `OK` nesta base; a unica verificacao com ocorrencias e de natureza financeira (`Revisar`), com 7 repasses divergentes. Isso nao comprova falha de cadastro, fraude ou prejuizo. A chave primaria `pedido_id` e os `CHECK` do schema ja restringem alguns erros na tabela original; os controles sao uteis para validacao e auditoria.
 
-**Progresso:** 9 de 12 exercicios aprovados na trilha SQL proposta, com media de **9,89/10**. Exercicio 10 nao iniciado.
+**Progresso naquela etapa:** 9 de 12 exercicios aprovados, com media de **9,89/10**. O Exercicio 10 foi concluido posteriormente.
+
+### Exercicio 10 — Comparacao parametrizada de periodos (aprovado, 10/10)
+
+- **Arquivo:** `sql/10_exercicio.sql`, publicado na branch `main` do repositorio privado.
+- **Commit do aluno:** `9c336b4` — `feat(sql): concluir exercicio 10 com comparacao parametrizada de periodos`.
+- **Execucao local confirmada pelo aluno:** duas linhas e nove colunas na base original de 36 pedidos sinteticos.
+- **Competencias:** CTE de parametros com `UNION ALL`, filtro de pedidos concluidos, calculo de divergencias, `LEFT JOIN` temporal, agregacoes condicionais, `COUNT(b.pedido_id)`, `COALESCE`, `NULLIF`, `LAG() OVER (ORDER BY ordem)` e variacao em pontos percentuais.
+
+| Periodo | Inicio | Fim | Concluidos | Divergentes | Taxa | Absoluta (R$) | Taxa anterior | Variacao (p.p.) |
+|---|---|---|---:|---:|---:|---:|---:|---:|
+| Setembro/2026 | 2026-09-01 | 2026-09-30 | 18 | 4 | 22,22% | 24,40 | NULL | NULL |
+| Outubro/2026 | 2026-10-01 | 2026-10-31 | 12 | 3 | 25,00% | 13,70 | 22,22% | +2,78 |
+
+**Interpretacao:** a taxa de divergencia aumentou 2,78 pontos percentuais, apesar da reducao de R$ 10,70 na soma absoluta das divergencias. Apenas dois periodos nao sustentam inferencia de tendencia duradoura.
+
+**Teste didatico de periodo vazio:** ao substituir temporariamente outubro por novembro/2026, sem pedidos na base, a logica preserva novembro, apresenta 0 concluidos, 0 divergentes, taxa exibida 0% e divergencia absoluta R$ 0,00. A variacao contra setembro fica -22,22 p.p., mas representa a convencao de exibicao de zero para ausencia de dados, nao uma melhoria financeira comprovada. A consulta publicada preserva os parametros setembro/outubro.
+
+**Limitacoes reconhecidas:** os parametros sao definidos por CTE, e ainda nao sao entradas vinculadas de uma aplicacao. Para cenarios reais, validar intervalos e evitar sobreposicoes indevidas; distinguir periodo sem dados de taxa observada igual a zero.
+
+**Progresso:** 10 de 12 exercicios aprovados na trilha SQL proposta, media de **9,90/10**. Exercicio 11 nao iniciado.
