@@ -43,7 +43,7 @@
 Divergencia financeira nao comprova fraude, falha ou prejuizo. O modelo de repasse e simplificado e os registros sao artificiais. Repasse ao restaurante nao equivale a lucro.
 
 ### Proxima atividade
-Exercicios 01 a 12 concluidos, aprovados e publicados. Etapa SQL inicial encerrada; proxima fase planejada: Python/Pandas, ainda nao iniciada.
+Exercicios SQL 01 a 12 concluidos, aprovados e publicados. Sprint de Python iniciado: Exercicio Python 01 aprovado 10/10 e publicado; proxima entrega planejada: Pandas e testes automatizados.
 
 ### Validacao do ambiente Git / GitHub — 2026-11-01
 
@@ -282,5 +282,36 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 - **12 de 12 exercicios aprovados e publicados**, com media final **9,92/10** (119 pontos de 120 possiveis).
 - **Projeto integrador:** relatorio financeiro explicado por regras e auditoria de 8 indicadores.
 - **Competencias demonstradas:** filtros e agregacoes, conciliacao financeira, CTEs, funcoes de janela, ranking/Pareto, analise temporal, verificacoes de qualidade e leitura de planos de consulta.
-- **Proxima fase prevista (nao iniciada):** Python e Pandas para leitura, transformacao, validacao automatizada e testes financeiros; posteriormente dashboards e componentes de IA explicavel.
+- **Fase seguinte iniciada posteriormente:** integracao Python/SQLite, com a primeira consulta de indicadores implementada e publicada (detalhes abaixo). Pandas, dashboard e IA ainda nao implementados.
 - **Status da documentacao:** README e diario atualizados diretamente no GitHub apos publicacao do aluno. Para sincronizar o clone local, executar `git pull --ff-only`.
+
+### Sprint MVP — Python 01: indicadores financeiros via SQLite (aprovado, 10/10)
+
+- **Arquivo:** `scripts/indicadores_financeiros.py`, confirmado diretamente no repositorio privado.
+- **Commit publicado pelo aluno:** `ad7b736` — `feat(python): integrar indicadores financeiros com SQLite`.
+- **Execucao local informada:** `py -3.13 scripts/indicadores_financeiros.py` retornou todos os **11 indicadores esperados**.
+- **Competencias:** biblioteca `sqlite3`, `pathlib.Path`, `contextlib.closing`, conexao de leitura `mode=ro`, `sqlite3.Row`, `fetchone()`, `dict()`, funcoes `obter_indicadores()` e `main()`, tratamento inicial de erros e separacao entre consulta e exibicao.
+
+| Indicador | Valor conferido |
+|---|---:|
+| Total de pedidos | 36 |
+| Pedidos concluidos | 30 |
+| Pedidos cancelados | 6 |
+| Faturamento bruto (R$) | 4.687,60 |
+| Taxas da plataforma (R$) | 609,40 |
+| Taxas logisticas (R$) | 235,50 |
+| Repasses realizados (R$) | 3.820,60 |
+| Pedidos divergentes | 7 |
+| Divergencia liquida (R$) | 22,10 |
+| Divergencia absoluta (R$) | 38,10 |
+| Taxa de divergencia | 23,33% |
+
+**Avaliacao:** **10/10** no exercicio. Os resultados foram comparados com a base original de 36 pedidos sintéticos. O script é uma integracao reutilizavel com SQLite; nao se trata ainda de dashboard, automacao agendada ou IA.
+
+**Melhorias planejadas:** tratar excecoes especificas (`FileNotFoundError`, `sqlite3.Error`) e encerrar com codigo diferente de zero quando houver falha; tratar `NULL` em somas da base vazia; centralizar formulas financeiras e criar testes automatizados.
+
+**Controle Git:** o aluno informou `git push origin main` bem-sucedido no commit `ad7b736`, com apenas `sql/11_plano.sql` nao rastreado no computador. README e diario atualizados pelo assistente na sequencia; executar `git pull --ff-only` para sincronizar a documentacao.
+
+**Prazo do sprint:** preparar demonstracao funcional de portfólio para candidatura ao iFood, com meta interna de MVP **12/11/2026** e candidatura pretendida **13/11/2026**, antes do limite informado **17/11/2026**. Projeto independente, baseado em dados sinteticos, sem vinculo com sistemas reais do iFood.
+
+**Proxima entrega:** Python/Pandas e testes de regressao financeira, ainda nao aprovados nem publicados.
