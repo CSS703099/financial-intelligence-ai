@@ -14,6 +14,7 @@
 - [x] Exercicio 04 — Taxa de divergencia com CTE e classificacao, nota **10/10**.
 - [x] Exercicio 05 — Evolucao mensal com CTEs e `LAG()`, nota **10/10**.
 - [x] Exercicio 06 — Ranking de divergencias e Pareto com funcoes de janela, nota **10/10**.
+- [x] Exercicio 07 — Deteccao por regras e alertas financeiros, nota **10/10**.
 
 ### Exercicio 01 — Indicadores dos pedidos concluidos
 - Quantidade de pedidos concluidos: **30**.
@@ -37,7 +38,7 @@
 Divergencia financeira nao comprova fraude, falha ou prejuizo. O modelo de repasse e simplificado e os registros sao artificiais. Repasse ao restaurante nao equivale a lucro.
 
 ### Proxima atividade
-Exercicios 01 a 06 concluidos e aprovados. Exercicio 07 ainda nao iniciado.
+Exercicios 01 a 07 concluidos e aprovados. Exercicio 08 ainda nao iniciado.
 
 ### Validacao do ambiente Git / GitHub — 2026-11-01
 
@@ -130,4 +131,26 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Cuidado analitico:** este ranking e uma priorizacao didatica de verificacao financeira, nao um indicio conclusivo de fraude ou prejuizo.
 
-**Resultado:** Exercicio 06 aprovado e publicado. Exercicio 07 ainda nao iniciado.
+**Resultado naquela etapa:** Exercicio 06 aprovado e publicado; Exercicio 07 concluido posteriormente.
+
+### Exercicio 07 — Deteccao por regras e alertas financeiros (aprovado, 10/10)
+
+- **Arquivo:** `sql/07_exercicio.sql`, disponivel na branch `main` do repositorio privado.
+- **Commit do aluno:** `1b58f8b` — `feat(sql): concluir exercicio 07 com alertas financeiros`.
+- **Verificacao:** 7 pedidos divergentes e 9 colunas; resultado confirmado pelo aluno ao executar o SQL no clone principal fora do OneDrive.
+- **Competencias:** CTEs, `COUNT(*) OVER (PARTITION BY restaurante)`, `CASE WHEN`, divergencias assinadas e absolutas, regras de gravidade, recomendacoes e ordenacao deterministica.
+
+| Nivel de alerta | Pedidos | Acao sugerida |
+|---|---:|---|
+| Critico | 2 | Revisao imediata |
+| Alto | 4 | Auditoria prioritaria |
+| Moderado | 1 | Monitoramento |
+| **Total** | **7** | |
+
+**Controles da base sintetica:** 30 pedidos concluidos, 7 divergentes, dos quais 5 com diferenca positiva e 2 com diferenca negativa; soma absoluta R$ 38,10.
+
+**Criterios didaticos:** Critico para divergencia absoluta >= R$ 7,00; Alto para divergencia absoluta >= R$ 5,00 ou restaurante com >= 4 pedidos divergentes (desde que nao Critico); Moderado para os demais casos. O calculo de recorrencia considera toda a base disponivel, sem janela temporal.
+
+**Interpretacao:** o Restaurante B concentra 5 dos 7 pedidos divergentes, justificando priorizacao de verificacao segundo as regras. Recomendacoes nao sao ordens de execucao; divergencia nao comprova fraude, erro ou prejuizo.
+
+**Estado:** Exercicio 07 aprovado, publicado e documentado; Exercicio 08 nao iniciado.
