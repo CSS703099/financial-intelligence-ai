@@ -282,7 +282,7 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 - **12 de 12 exercicios aprovados e publicados**, com media final **9,92/10** (119 pontos de 120 possiveis).
 - **Projeto integrador:** relatorio financeiro explicado por regras e auditoria de 8 indicadores.
 - **Competencias demonstradas:** filtros e agregacoes, conciliacao financeira, CTEs, funcoes de janela, ranking/Pareto, analise temporal, verificacoes de qualidade e leitura de planos de consulta.
-- **Fase seguinte iniciada posteriormente:** integracao Python/SQLite, com a primeira consulta de indicadores implementada e publicada (detalhes abaixo). Pandas, dashboard e IA ainda nao implementados.
+- **Fase seguinte iniciada posteriormente:** integracao Python/SQLite e Pandas implementadas e publicadas; cinco testes automatizados aprovados conforme execucao local do aluno (detalhes abaixo). Dashboard e IA ainda nao implementados.
 - **Status da documentacao:** README e diario atualizados diretamente no GitHub apos publicacao do aluno. Para sincronizar o clone local, executar `git pull --ff-only`.
 
 ### Sprint MVP — Python 01: indicadores financeiros via SQLite (aprovado, 10/10)
@@ -314,4 +314,43 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Prazo do sprint:** preparar demonstracao funcional de portfólio para candidatura ao iFood, com meta interna de MVP **12/11/2026** e candidatura pretendida **13/11/2026**, antes do limite informado **17/11/2026**. Projeto independente, baseado em dados sinteticos, sem vinculo com sistemas reais do iFood.
 
-**Proxima entrega:** Python/Pandas e testes de regressao financeira, ainda nao aprovados nem publicados.
+**Proxima entrega naquela etapa:** Python/Pandas e testes de regressao financeira, concluidos posteriormente (ver secao Python 02).
+
+
+### Sprint MVP — Python 02: Pandas e testes automatizados (aprovado, 10/10)
+
+- **Arquivos:** `scripts/analise_pandas.py`, `tests/test_analise_pandas.py` e `requirements-mvp.txt`, conferidos diretamente no repositorio privado na branch `main`.
+- **Commit publicado pelo aluno:** `3725d9a` — `feat(python): validar indicadores com pandas e pytest`.
+- **Validacao local informada pelo aluno:** programa Pandas retornou 11 indicadores; `pytest` informou **5 passed in 2.21s**.
+- **Competencias:** `pd.read_sql_query()`, conexao SQLite em modo `ro`, filtragem `loc`, `copy()`, DataFrame sem mutacao, transformacao de valores monetarios em centavos inteiros, somas e contagens, calculo de repasse esperado e divergencia e retorno de dicionario reutilizavel.
+- **Separacao de responsabilidades:** `carregar_pedidos()` busca dados e `calcular_indicadores(df)` calcula os indicadores sem consultar diretamente o SQLite.
+- **Dependencias registradas:** `pandas>=2.2.3,<4` e `pytest>=8,<10`, em `requirements-mvp.txt`.
+
+| Indicador Pandas | Valor conferido |
+|---|---:|
+| Total de pedidos | 36 |
+| Concluidos | 30 |
+| Cancelados | 6 |
+| Faturamento bruto (R$) | 4.687,60 |
+| Taxas da plataforma (R$) | 609,40 |
+| Taxas logisticas (R$) | 235,50 |
+| Repasses realizados (R$) | 3.820,60 |
+| Pedidos divergentes | 7 |
+| Divergencia liquida (R$) | 22,10 |
+| Divergencia absoluta (R$) | 38,10 |
+| Taxa de divergencia | 23,33% |
+
+**Testes aprovados na execucao local informada pelo aluno:**
+1. `test_pandas_equivalente_ao_sql` — verifica nomes e valores dos 11 indicadores.
+2. `test_base_vazia` — valida 0 pedidos e taxa `None` quando nao existe denominador.
+3. `test_sem_divergencias` — usa uma copia do DataFrame com repasses ajustados; divergencias zeradas.
+4. `test_banco_inexistente` — espera `FileNotFoundError`.
+5. `test_dataframe_preservado` — usa `pd.testing.assert_frame_equal` para garantir que a entrada nao mudou.
+
+**Avaliacao:** **10/10**. Indicadores confirmados contra o CSV sintetico original e a consulta SQL do Python 01. Proximo reforco recomendado: testes com valores esperados fixos (evitar falhas correlacionadas de SQL e Pandas), validacao de tipos/ausencia de valores e encerramento com codigo diferente de zero em erros de execucao.
+
+**Controle Git:** aluno confirmou `git push origin main` bem-sucedido no commit `3725d9a`, com `sql/11_plano.sql` ainda nao rastreado localmente; o aviso de `LF` e `CRLF` no arquivo de dependencias nao comprometeu o commit.
+
+**Progresso rumo ao iFood:** SQL (12/12) e Python 01/02 aprovados e versionados. Proxima entrega prevista: dashboard Streamlit com filtros por periodo/restaurante e metricas verificaveis, visando MVP demonstravel ate **12/11/2026** e candidatura pretendida em **13/11/2026**; prazo limite informado **17/11/2026**. Essas metas sao de planejamento, nao funcionalidades concluidas.
+
+**Status dos proximos recursos:** dashboard, simulacao, IA e hospedagem privada ainda nao implementados.
