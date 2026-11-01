@@ -12,6 +12,7 @@
 - [x] Exercicio 02 — Conciliacao financeira, nota **10/10**.
 - [x] Exercicio 03 — Divergencias por restaurante, nota **10/10**.
 - [x] Exercicio 04 — Taxa de divergencia com CTE e classificacao, nota **10/10**.
+- [x] Exercicio 05 — Evolucao mensal com CTEs e `LAG()`, nota **10/10**.
 
 ### Exercicio 01 — Indicadores dos pedidos concluidos
 - Quantidade de pedidos concluidos: **30**.
@@ -35,7 +36,7 @@
 Divergencia financeira nao comprova fraude, falha ou prejuizo. O modelo de repasse e simplificado e os registros sao artificiais. Repasse ao restaurante nao equivale a lucro.
 
 ### Proxima atividade
-Exercicios 01 a 04 concluidos e aprovados. Exercicio 05 ainda nao iniciado.
+Exercicios 01 a 05 concluidos e aprovados. Exercicio 06 ainda nao iniciado.
 
 ### Validacao do ambiente Git / GitHub — 2026-11-01
 
@@ -88,4 +89,22 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Recuperacao do ambiente:** o antigo checkout em pasta sincronizada ao OneDrive apresentou `HEAD` invalido. O usuario preservou uma copia de recuperacao, clonou o repositorio em `C:\\Users\\caion\\Projetos\\financial-intelligence-ai`, restaurou apenas o SQL 04, reproduziu os resultados, configurou a identidade local do Git e publicou o arquivo. O novo checkout passou no teste de sincronizacao `git status -sb`: `## main...origin/main`.
 
-**Estado:** Exercicio 04 aprovado e publicado. Exercicio 05 nao iniciado.
+**Estado naquela etapa:** Exercicio 04 aprovado e publicado; o Exercicio 05 foi concluido posteriormente.
+
+### Exercicio 05 — Analise temporal e LAG() (aprovado, 10/10)
+
+- **Arquivo:** `sql/05_exercicio.sql`.
+- **Commit publicado pelo aluno:** `e0738fd` na branch `main`.
+- **Execucao local confirmada:** 2 linhas retornadas pelo SQLite com a base original sintetica.
+- **Conceitos praticados:** CTEs encadeadas, `SUBSTR(data_pedido, 1, 7)`, agregacoes mensais, `SUM(CASE WHEN ...)`, `LAG(...) OVER (ORDER BY mes)`, variacao em pontos percentuais e classificacao condicional com `CASE WHEN`.
+
+| Mes | Pedidos concluidos | Pedidos divergentes | Taxa divergencia | Divergencia absoluta (R$) | Taxa mes anterior | Variacao (p.p.) | Tendencia |
+|---|---:|---:|---:|---:|---:|---:|---|
+| 2026-09 | 18 | 4 | 22,22% | 24,40 | NULL | NULL | Sem historico |
+| 2026-10 | 12 | 3 | 25,00% | 13,70 | 22,22% | +2,78 | Aumentou |
+
+**Interpretacao:** a taxa aumentou de 22,22% para 25,00%, enquanto o volume absoluto das diferencas caiu de R$ 24,40 para R$ 13,70. E uma comparacao entre apenas dois meses, insuficiente para identificar uma tendencia sustentada.
+
+**Aprendizado de versionamento:** o arquivo foi criado inicialmente na pasta antiga; o aluno o transferiu para o clone valido fora do OneDrive, executou a consulta, adicionou somente o SQL 05, criou o commit `e0738fd`, fez `git push origin main` e validou `git status -sb` sem pendencias.
+
+**Resultado:** Exercicio 05 aprovado e publicado. Exercicio 06 nao iniciado. Todas as metricas sao de dados ficticios, e divergencias nao significam fraude ou erro confirmado.
