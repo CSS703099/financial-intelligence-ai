@@ -353,7 +353,7 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Progresso rumo ao iFood:** SQL (12/12) e Python 01/02 aprovados e versionados. Proxima entrega prevista: dashboard Streamlit com filtros por periodo/restaurante e metricas verificaveis, visando MVP demonstravel ate **12/11/2026** e candidatura pretendida em **13/11/2026**; prazo limite informado **17/11/2026**. Essas metas sao de planejamento, nao funcionalidades concluidas.
 
-**Status após Python 03:** dashboard Streamlit local implementado e publicado; simulacao, IA e hospedagem privada ainda nao implementados (detalhes abaixo).
+**Status após Python 04:** dashboard Streamlit e simulador de credito local implementados e publicados; IA generativa e hospedagem privada ainda nao implementadas (detalhes abaixo).
 
 
 ### Sprint MVP — Python 03: dashboard Streamlit (aprovado, 10/10)
@@ -372,3 +372,19 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 **Limites honestos do prototipo:** base ficticia, sem acesso a operacoes reais, sem IA integrada, sem simulador de cenarios, sem hospedagem externa. Um link local `127.0.0.1` nao e acessivel por recrutadores.
 
 **Proximo sprint planejado:** Python 04 — simulador de cenarios financeiros com testes e integracao ao dashboard, depois avaliacao de IA generativa, com meta interna de MVP demonstravel **12/11/2026** e candidatura pretendida **13/11/2026** (prazo informado **17/11/2026**). Nao iniciar nova etapa sem solicitacao do aluno.
+
+
+### Sprint MVP — Python 04: simulador de crédito 30+/90+ (aprovado, 10/10)
+
+- **Commit do aluno:** `5fa74ed` — `feat(credit): adicionar simulador de cenarios 30 e 90 dias`, confirmado no repositorio privado na branch `main`.
+- **Arquivos versionados:** `app.py` (integra as areas de conciliação de repasses e credito), `scripts/simulador_credito.py`, `tests/test_simulador_credito.py` e `tests/test_simulador_ui.py`.
+- **Arquitetura:** simulador de sensibilidade deterministico e independente dos 36 pedidos ficticios; nao utiliza nem modifica o SQLite, nao é modelo preditivo, nao executa decisões de credito, nao integra IA generativa.
+- **Conceitos praticados:** saldos 30+ e 90+ por carteira (com 90+ contido em 30+), variacao em pontos percentuais, validacao de saldos e taxas inclusive limites, `Decimal` com arredondamento monetario, classificacao didatica com explicacao e acao sujeita a revisao humana, integração Streamlit com filtros independentes e grafico Base vs Cenário lado a lado (`stack=False`).
+- **Evidencia de execucao:** aluno informou `python -m py_compile app.py` sem erro, `python -m pytest -v` com **28 passed in 4.73s** em Windows Python 3.13.17 e Streamlit iniciado em `http://127.0.0.1:8501`. Captura anterior da interface mostrou as métricas de crédito; após correção de indentação, sintaxe e suíte completa voltaram a passar. A aparência das barras após `stack=False` não foi novamente comprovada por captura.
+- **Testes:** 5 de Pandas, 7 do dashboard, 14 do motor de credito e 2 do Streamlit (28/28). Dois testes extras feitos pelo aluno: `test_choque_exato_90_igual_30`, que valida o limite 90+ = 30+; `test_cenario_dados_invalidos_nao_alteram_conciliacao`, que verifica ValueError e preservacao dos indicadores SQL.
+- **Incidente corrigido:** ao ajustar o grafico Base/Cenario com `stack=False`, surgiu `IndentationError` na linha 85 de `app.py`, causando quatro falhas de interface e 24 testes aprovados; apos substituicao e correção da indentacao, `py_compile` e os 28 testes passaram.
+- **Controle Git:** `git commit` criou `5fa74ed`, `git fetch origin` seguido de `git rebase origin/main` indicou `Current branch main is up to date.`, `git push origin main` teve sucesso e `git status -sb` mostrou `## main...origin/main` e apenas `?? sql/11_plano.sql` (arquivo auxiliar mantido localmente).
+- **Nota final:** **10/10** (aprovado). Verificacao manual opcional de layout final e revisao profissional da documentação antes da candidatura.
+- **Proximos passos:** Python 05 — IA generativa explicavel com entradas numericas validadas, saida estruturada, testes de aderencia aos fatos e aprovacao humana; depois QA e demonstracao privada mediante autorizacao. Meta interna de MVP **12/11/2026**, candidatura pretendida **13/11/2026** e limite informado **17/11/2026**.
+
+**Estado real:** SQL e Python 01–04 publicados; as regras do simulador sao explicaveis, mas ainda **nao ha IA generativa integrada** nem URL remota de demonstracao.
