@@ -36,7 +36,7 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 | Python 01 — indicadores via SQLite | **Aprovado 10/10 e publicado** | `scripts/indicadores_financeiros.py` |
 | Python 02 — Pandas e testes automatizados | **Aprovado 10/10 e publicado** | `scripts/analise_pandas.py`, `tests/test_analise_pandas.py`, `requirements-mvp.txt` |
 | Python 03 — Dashboard Streamlit | **Aprovado 10/10 e publicado** | `app.py`, `scripts/dashboard_dados.py`, `tests/test_dashboard.py`, `.streamlit/config.toml` |
-| Simulador de cenários financeiros | Planejado | Ainda não implementado |
+| Python 04 — Simulador de crédito 30+/90+ | **Aprovado 10/10 e publicado** | `scripts/simulador_credito.py`, `tests/test_simulador_credito.py`, `tests/test_simulador_ui.py`, `app.py` |
 | IA generativa com avaliação e revisão humana | Planejado, dependente de testes | Ainda não implementada |
 | Demonstração privada | Planejada, sujeita a autorização | Ainda não hospedada |
 
@@ -47,6 +47,10 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 **Python 02:** leitura da tabela `pedidos` via `pd.read_sql_query()` em conexão SQLite somente leitura; implementação independente dos mesmos **11 indicadores** com operações de Pandas em centavos inteiros; separação das funções `carregar_pedidos()` e `calcular_indicadores()`; preservação do DataFrame de entrada; taxa `None` quando não há pedidos concluídos. **5 testes `pytest` passaram** na execução local informada pelo aluno: equivalência SQL/Pandas, base vazia, cenário sem divergências, banco inexistente e preservação do DataFrame. Os **11 indicadores** batem com o CSV sintético original; etapa aprovada **10/10** e publicada no commit `3725d9a`.
 
 **Melhorias para o MVP:** adicionar testes com valores fixos de referência para o CSV, testar falhas com encerramento não zero, validar dados ausentes e tipos monetários antes da interface, além de preparar filtros interativos por período/restaurante.
+
+**Python 04 — Simulador de crédito 30+/90+:** simulação determinística de sensibilidade com carteira **hipotética independente** dos pedidos de conciliação. Permite editar saldos da carteira, 30+ e 90+, alterar taxas em **pontos percentuais**, comparar saldos base/cenário lado a lado (`st.bar_chart(..., stack=False)`) e obter nível de alerta com justificativa e ação para **revisão humana**, por regras didáticas. Validação `0 ≤ 90+ ≤ 30+ ≤ carteira` tanto na base quanto no cenário, com `Decimal` e arredondamento monetário. O módulo **não treina modelo, não prevê inadimplência, não usa IA generativa e não executa decisões de crédito**.
+
+**Evidências Python 04:** commit **`5fa74ed`** publicado na branch `main`, contendo `app.py`, `scripts/simulador_credito.py`, `tests/test_simulador_credito.py` e `tests/test_simulador_ui.py`. O aluno reportou `python -m py_compile app.py` sem erros, `pytest -v` com **28 testes aprovados em 4,73 s** e Streamlit inicializado em `127.0.0.1:8501`. Os dois testes individuais cobrem a igualdade limite 90+ = 30+ e a preservação dos indicadores de conciliação após tentativa de cenário inválido. **Nota final: 10/10.** A correção de indentação do gráfico foi validada pelos testes; a disposição visual pós-correção ainda merece conferência manual.
 
 **Python 03:** dashboard **Streamlit 1.66.1** executado localmente pelo aluno, com filtro inclusivo por período e seleção de restaurantes, cartões financeiros, gráficos de impacto por restaurante e evolução mensal, conciliação por pedido, priorização por regras didáticas e exportação CSV. O painel reutiliza `carregar_pedidos()` e `calcular_indicadores()`; os arquivos `app.py`, `scripts/dashboard_dados.py`, `tests/test_dashboard.py`, `.streamlit/config.toml` e `requirements-mvp.txt` foram publicados no commit **`a192aa9`**, após `git rebase origin/main` e `git push origin main`. **7/7 testes novos e 12/12 testes no total** passaram na execução local informada pelo aluno; a interface foi exibida em `127.0.0.1:8501`, não hospedada externamente. **Avaliação: 10/10.** A conferência manual completa de exportação e filtros adicionais permanece recomendada para a demonstração. **Não há IA integrada.**
 
@@ -143,9 +147,12 @@ sql/12_auditoria.sql
 scripts/indicadores_financeiros.py
 scripts/analise_pandas.py
 scripts/dashboard_dados.py
+scripts/simulador_credito.py
 app.py
 tests/test_analise_pandas.py
 tests/test_dashboard.py
+tests/test_simulador_credito.py
+tests/test_simulador_ui.py
 .streamlit/config.toml
 requirements-mvp.txt
 docs/diario_de_bordo.md
@@ -154,7 +161,7 @@ docs/diario_de_bordo.md
 
 ## Próximas etapas
 
-**Formação inicial de SQL concluída; Python 01, 02 e 03 aprovados e publicados.** O **dashboard Streamlit funciona localmente**, sem hospedagem remota. Próxima entrega: **simulador de cenários financeiros** com dados sintéticos e testes, seguido de eventual IA generativa com avaliações e revisão humana. O simulador, a integração de IA e a implantação privada **ainda não estão implementados**. Para uso profissional, ampliar testes de borda (inclusive ausência total de divergências), padronizar arredondamento por pedido e substituir valores esperados fixos por validações adequadas ao dataset em produção.
+**Formação inicial de SQL concluída; Python 01, 02, 03 e 04 aprovados e publicados.** O **dashboard Streamlit e o simulador de crédito funcionam localmente**, sem hospedagem remota. Próxima entrega: **Python 05 — integração e avaliação de IA generativa explicável**, com dados sintéticos, validação das saídas e revisão humana. **IA generativa e implantação privada ainda não foram implementadas.** Para uso profissional, ampliar testes de borda (inclusive ausência total de divergências), padronizar arredondamento por pedido e substituir valores esperados fixos por validações adequadas ao dataset em produção.
 
 ## Segurança
 
