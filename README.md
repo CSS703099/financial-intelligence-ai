@@ -1,2 +1,74 @@
-# financial-intelligence-ai
-Financial Intelligence AI — Dados, Finanças e Automação com Inteligência Artificial
+# Financial Intelligence AI — Finanças & Automação
+
+Projeto independente de portfólio, desenvolvido com exercícios progressivos em SQL, Python e SQLite. Objetivo futuro: aplicar IA a análises financeiras e à automação de relatórios.
+
+> **Transparência:** base inteiramente **sintética**, sem dados internos ou vínculo de desenvolvimento com o iFood. **Ainda não há IA integrada nesta versão.** Os resultados são simulações, não resultados de produção.
+
+## Progresso — Dia 1
+
+| Etapa | Situação | Evidência |
+|---|---|---|
+| Ambiente Python e VS Code | Concluído | Banco criado no computador do aluno |
+| SQLite | Concluído | 36 registros sintéticos |
+| Exploração | Concluído | `sql/00_exploracao.sql` |
+| Exercício 01 — indicadores | Aprovado 9/10 | `sql/01_exercicio.sql` |
+| Exercício 02 — conciliação | Aprovado 10/10 | `sql/02_exercicio.sql` |
+| Exercício 03 | Não iniciado | Aguardando nova atividade |
+
+## Problema de negócio
+
+Em um marketplace fictício, analisar os pedidos efetivamente concluídos, as taxas e os repasses. Modelo de teste:
+
+```text
+repasse_esperado = valor_bruto - taxa_plataforma - taxa_logistica
+divergencia = repasse_esperado - repasse_real
+```
+
+Divergência positiva indica que o repasse realizado ficou abaixo do esperado pelo **modelo simplificado**. A divergência não comprova fraude ou prejuízo. Repasse não equivale a lucro.
+
+## Resultados validados com a base sintética
+
+- **36** pedidos na base; **30** concluídos.
+- **R$ 4.687,60** de valor bruto dos pedidos concluídos.
+- **R$ 609,40** em taxas da plataforma; **R$ 235,50** em taxas logísticas.
+- **R$ 3.820,60** em repasses registrados.
+- **7** pedidos com diferenças; divergência líquida assinada de **R$ 22,10**.
+- Soma absoluta das diferenças: **R$ 38,10**.
+
+## Como executar
+
+Requisitos: Python **3.9+**, sem dependências externas.
+
+No terminal, aberto na raiz deste repositório:
+
+```powershell
+py -3.13 scripts/criar_banco.py
+py -3.13 scripts/executar_sql.py sql/00_exploracao.sql
+py -3.13 scripts/executar_sql.py sql/01_exercicio.sql
+py -3.13 scripts/executar_sql.py sql/02_exercicio.sql
+```
+
+Se não utiliza o Python Launcher do Windows, substitua `py -3.13` por `python`.
+
+O banco `financial_intelligence.db` é gerado localmente e está no `.gitignore`.
+
+## Estrutura
+
+```text
+dados/pedidos_sinteticos.csv
+scripts/criar_banco.py
+scripts/executar_sql.py
+sql/00_exploracao.sql
+sql/01_exercicio.sql
+sql/02_exercicio.sql
+docs/diario_de_bordo.md
+.gitignore
+```
+
+## Próximas etapas
+
+Consolidação SQL, testes, Python/Pandas, interface interativa, prompts avaliados, integração de API e automações de IA. Funcionalidades futuras não devem ser apresentadas como já implementadas.
+
+## Segurança
+
+Nunca publique tokens, senhas, chaves de API nem dados reais de clientes. Para métricas financeiras, mantenha os cálculos verificáveis em SQL/Python e use LLMs para auxiliar a interpretação, com testes e revisão humana.
