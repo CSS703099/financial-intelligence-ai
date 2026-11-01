@@ -18,6 +18,7 @@
 - [x] Exercicio 08 — Painel executivo de risco por restaurante, nota **10/10**.
 - [x] Exercicio 09 — Controles de qualidade e consistencia financeira, nota **10/10**.
 - [x] Exercicio 10 — Comparacao parametrizada de periodos, nota **10/10**.
+- [x] Exercicio 11 — Equivalencia financeira e analise de planos SQL, nota **10/10**.
 
 ### Exercicio 01 — Indicadores dos pedidos concluidos
 - Quantidade de pedidos concluidos: **30**.
@@ -41,7 +42,7 @@
 Divergencia financeira nao comprova fraude, falha ou prejuizo. O modelo de repasse e simplificado e os registros sao artificiais. Repasse ao restaurante nao equivale a lucro.
 
 ### Proxima atividade
-Exercicios 01 a 10 concluidos e aprovados. Exercicio 11 ainda nao iniciado.
+Exercicios 01 a 11 concluidos e aprovados. Exercicio 12 ainda nao iniciado.
 
 ### Validacao do ambiente Git / GitHub — 2026-11-01
 
@@ -221,4 +222,32 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Limitacoes reconhecidas:** os parametros sao definidos por CTE, e ainda nao sao entradas vinculadas de uma aplicacao. Para cenarios reais, validar intervalos e evitar sobreposicoes indevidas; distinguir periodo sem dados de taxa observada igual a zero.
 
-**Progresso:** 10 de 12 exercicios aprovados na trilha SQL proposta, media de **9,90/10**. Exercicio 11 nao iniciado.
+**Progresso naquela etapa:** 10 de 12 exercicios aprovados na trilha SQL proposta, media de **9,90/10**. Exercicio 11 concluido posteriormente.
+
+### Exercicio 11 — Equivalencia financeira e otimizacao de filtros SQL (aprovado, 10/10)
+
+- **Arquivo:** `sql/11_exercicio.sql`, publicado no repositorio privado, branch `main`.
+- **Commit do aluno:** `b1ceb9b` — `feat(sql): concluir exercicio 11 com validacao e otimizacao`.
+- **Execucao local confirmada pelo aluno:** seis linhas, sete colunas, todas com `validacao = 'OK'`.
+- **Competencias:** CTEs, calculo de divergencias, comparacao de filtro mensal por `SUBSTR` com filtro direto `data_pedido >= ... AND data_pedido < ...`, `UNION` de chaves, `LEFT JOIN`, verificacao de grupos ausentes, `NULLIF`, `COALESCE`, `EXPLAIN QUERY PLAN` e interpretacao de indices.
+
+| Mes | Restaurante | Concluidos | Divergentes | Taxa | Absoluta (R$) | Validacao |
+|---|---|---:|---:|---:|---:|---|
+| 2026-09 | Restaurante A | 4 | 0 | 0,00% | 0,00 | OK |
+| 2026-09 | Restaurante B | 7 | 3 | 42,86% | 19,90 | OK |
+| 2026-09 | Restaurante C | 7 | 1 | 14,29% | 4,50 | OK |
+| 2026-10 | Restaurante A | 2 | 1 | 50,00% | 6,20 | OK |
+| 2026-10 | Restaurante B | 5 | 2 | 40,00% | 7,50 | OK |
+| 2026-10 | Restaurante C | 5 | 0 | 0,00% | 0,00 | OK |
+
+**Totais validados:** 30 pedidos concluidos, 7 divergentes e R$ 38,10 de diferencas absolutas. A comparacao identifica divergencias nos indicadores e combinacoes de chave presentes em apenas uma das versoes.
+
+**Correcao durante a atividade:** a primeira consulta enviada nao disponibilizava `data_pedido` na CTE `base_calculada`, apesar de usa-la no filtro da CTE `otimizada`. O aluno acrescentou `data_pedido` a CTE, reexecutou com sucesso, apresentou os seis resultados corretos e recebeu nota definitiva **10/10**.
+
+**EXPLAIN QUERY PLAN:** os dois filtros de data retornaram `SCAN pedidos` na base sem indice dedicado de data. A busca de `pedido_id = 'PED-0020'` retornou `SEARCH pedidos USING COVERING INDEX sqlite_autoindex_pedidos_1 (pedido_id=?)`. A busca por chave primaria utiliza o indice automatico. O filtro de datas por intervalo e mais favoravel a um futuro indice em `data_pedido`, mas **nenhuma melhoria de velocidade foi comprovada** no banco atual com 36 registros.
+
+**Arquivo auxiliar:** `sql/11_plano.sql` permaneceu local, nao rastreado pelo Git, conforme `git status -sb` informado depois do push. Nao integrou o commit `b1ceb9b`.
+
+**Seguranca e limites:** demonstracao didatica com dados sinteticos, sem dados reais nem IA integrada. Indices e benchmarks exigiriam avaliacao adicional com volume de dados maior e planos comparaveis.
+
+**Progresso:** 11 de 12 exercicios aprovados na trilha SQL proposta; media **9,91/10**. Exercicio 12 ainda nao iniciado.
