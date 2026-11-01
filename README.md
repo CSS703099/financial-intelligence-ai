@@ -22,6 +22,9 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 | Exercício 09 — controles de qualidade e integridade | Aprovado 10/10 | `sql/09_exercicio.sql` |
 | Exercício 10 — comparação parametrizável de períodos | Aprovado 10/10 | `sql/10_exercicio.sql` |
 | Exercício 11 — validação de equivalência e planos SQL | Aprovado 10/10 | `sql/11_exercicio.sql` |
+| Exercício 12 — projeto integrador e auditoria final | Aprovado 10/10 | `sql/12_exercicio.sql` e `sql/12_auditoria.sql` |
+
+**Etapa SQL inicial encerrada em 2026-11-01:** **12 de 12 exercícios aprovados**, média final **9,92/10** (11 exercícios com nota 10 e o exercício 01 com nota 9). Código SQL e auditoria final publicados no repositório privado.
 
 ## Problema de negócio
 
@@ -51,6 +54,7 @@ Divergência positiva indica que o repasse realizado ficou abaixo do esperado pe
 - **Exercício 09:** seis controles de integridade e financeiro com `UNION ALL`, CTEs e `CASE WHEN`: **5 OK**, **0 Falha** e **1 Revisar** (7 divergências de repasse). As ocorrências financeiras não são tratadas automaticamente como erros de qualidade.
 - **Exercício 10:** comparação de setembro/2026 (**18** pedidos concluídos; **4** divergentes; **22,22%**; **R$ 24,40** absolutos) e outubro/2026 (**12** concluídos; **3** divergentes; **25,00%**; **R$ 13,70** absolutos), com **+2,78 p.p.** de variação. Utiliza CTE de parâmetros, `LEFT JOIN`, `COALESCE`, `NULLIF` e `LAG()`; preserva intervalos sem pedidos.
 - **Exercício 11:** validação de equivalência entre filtro mensal com `SUBSTR` e filtro por intervalo de datas. **6 combinações** mês/restaurante retornaram `OK`, totalizando **30** pedidos concluídos, **7** divergências e **R$ 38,10** absolutos. Planos didáticos do SQLite: `SCAN pedidos` nos filtros de data e `SEARCH ... USING COVERING INDEX sqlite_autoindex_pedidos_1` na busca pela chave primária. **Não foi comprovado ganho de velocidade** na base pequena.
+- **Exercício 12:** relatório integrador com **6 agrupamentos** mês/restaurante, ranking de impacto, taxa, divergência líquida e absoluta, participação, prioridade e ação sugerida. Maior impacto: **Restaurante B em setembro (R$ 19,90; 52,23% do impacto total; prioridade `Critico`)**. No agregado, Restaurante B concentra **R$ 27,40 (71,92%)**. A auditoria independente validou **8 de 8 controles `OK`**, incluindo 36 pedidos, 30 concluídos, 6 cancelados, 7 divergentes, R$ 22,10 líquidos e R$ 38,10 absolutos. Projeto final aprovado **10/10**.
 
 ## Como executar
 
@@ -72,6 +76,8 @@ py -3.13 scripts/executar_sql.py sql/08_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/09_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/10_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/11_exercicio.sql
+py -3.13 scripts/executar_sql.py sql/12_exercicio.sql
+py -3.13 scripts/executar_sql.py sql/12_auditoria.sql
 ```
 
 Se não utiliza o Python Launcher do Windows, substitua `py -3.13` por `python`.
@@ -96,13 +102,15 @@ sql/08_exercicio.sql
 sql/09_exercicio.sql
 sql/10_exercicio.sql
 sql/11_exercicio.sql
+sql/12_exercicio.sql
+sql/12_auditoria.sql
 docs/diario_de_bordo.md
 .gitignore
 ```
 
 ## Próximas etapas
 
-Consolidação SQL, testes, Python/Pandas, interface interativa, prompts avaliados, integração de API e automações de IA. Funcionalidades futuras não devem ser apresentadas como já implementadas.
+**Formação inicial de SQL concluída.** Próxima fase planejada: Python/Pandas para processar os dados sintéticos, automatizar os controles financeiros e adicionar testes repetíveis; posteriormente, interface interativa, prompts avaliados, integração de API e automações de IA com revisão humana. Essas funcionalidades futuras **ainda não estão implementadas**. Para uso profissional, ampliar testes de borda (inclusive ausência total de divergências), padronizar arredondamento por pedido e substituir valores esperados fixos por validações adequadas ao dataset em produção.
 
 ## Segurança
 
