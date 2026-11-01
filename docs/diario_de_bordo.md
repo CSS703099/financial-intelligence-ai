@@ -13,6 +13,7 @@
 - [x] Exercicio 03 — Divergencias por restaurante, nota **10/10**.
 - [x] Exercicio 04 — Taxa de divergencia com CTE e classificacao, nota **10/10**.
 - [x] Exercicio 05 — Evolucao mensal com CTEs e `LAG()`, nota **10/10**.
+- [x] Exercicio 06 — Ranking de divergencias e Pareto com funcoes de janela, nota **10/10**.
 
 ### Exercicio 01 — Indicadores dos pedidos concluidos
 - Quantidade de pedidos concluidos: **30**.
@@ -36,7 +37,7 @@
 Divergencia financeira nao comprova fraude, falha ou prejuizo. O modelo de repasse e simplificado e os registros sao artificiais. Repasse ao restaurante nao equivale a lucro.
 
 ### Proxima atividade
-Exercicios 01 a 05 concluidos e aprovados. Exercicio 06 ainda nao iniciado.
+Exercicios 01 a 06 concluidos e aprovados. Exercicio 07 ainda nao iniciado.
 
 ### Validacao do ambiente Git / GitHub — 2026-11-01
 
@@ -107,4 +108,26 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Aprendizado de versionamento:** o arquivo foi criado inicialmente na pasta antiga; o aluno o transferiu para o clone valido fora do OneDrive, executou a consulta, adicionou somente o SQL 05, criou o commit `e0738fd`, fez `git push origin main` e validou `git status -sb` sem pendencias.
 
-**Resultado:** Exercicio 05 aprovado e publicado. Exercicio 06 nao iniciado. Todas as metricas sao de dados ficticios, e divergencias nao significam fraude ou erro confirmado.
+**Resultado naquela etapa:** Exercicio 05 aprovado e publicado; o Exercicio 06 foi concluido posteriormente. Todas as metricas sao de dados ficticios, e divergencias nao significam fraude ou erro confirmado.
+
+### Exercicio 06 — Ranking de divergencias e Pareto (aprovado, 10/10)
+
+- **Arquivo:** `sql/06_exercicio.sql`, publicado na branch `main` do repositorio privado.
+- **Execucao local confirmada pelo aluno:** sete linhas no SQLite, apos transferir a consulta para a pasta de trabalho valida fora do OneDrive.
+- **Habilidades:** CTEs encadeadas, `ROW_NUMBER() OVER (...)`, `SUM(...) OVER ()`, janela acumulada com `ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`, `ABS()`, `ROUND()` e desempate deterministico no ranking.
+
+| Posicao | Pedido | Divergencia assinada (R$) | Absoluta (R$) | Participacao | Acumulado |
+|---|---|---:|---:|---:|---:|
+| 1 | PED-0020 | 9,90 | 9,90 | 25,98% | 25,98% |
+| 2 | PED-0008 | 7,00 | 7,00 | 18,37% | 44,36% |
+| 3 | PED-0031 | 6,20 | 6,20 | 16,27% | 60,63% |
+| 4 | PED-0026 | -5,00 | 5,00 | 13,12% | 73,75% |
+| 5 | PED-0003 | 4,50 | 4,50 | 11,81% | 85,56% |
+| 6 | PED-0014 | -3,00 | 3,00 | 7,87% | 93,44% |
+| 7 | PED-0035 | 2,50 | 2,50 | 6,56% | 100,00% |
+
+**Interpretacao:** as cinco maiores divergencias absolutas representam R$ 32,60, equivalentes a 85,56% do total absoluto de R$ 38,10. Percentuais individuais arredondados somam 99,98%, enquanto o acumulado final calculado sobre valores monetarios nao arredondados no percentual resulta em 100,00%.
+
+**Cuidado analitico:** este ranking e uma priorizacao didatica de verificacao financeira, nao um indicio conclusivo de fraude ou prejuizo.
+
+**Resultado:** Exercicio 06 aprovado e publicado. Exercicio 07 ainda nao iniciado.
