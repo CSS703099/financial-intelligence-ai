@@ -20,6 +20,7 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 | Exercício 07 — detecção por regras e alertas | Aprovado 10/10 | `sql/07_exercicio.sql` |
 | Exercício 08 — painel executivo de risco | Aprovado 10/10 | `sql/08_exercicio.sql` |
 | Exercício 09 — controles de qualidade e integridade | Aprovado 10/10 | `sql/09_exercicio.sql` |
+| Exercício 10 — comparação parametrizável de períodos | Aprovado 10/10 | `sql/10_exercicio.sql` |
 
 ## Problema de negócio
 
@@ -47,6 +48,7 @@ Divergência positiva indica que o repasse realizado ficou abaixo do esperado pe
 - **Exercício 07:** 7 alertas gerados por regras explicáveis: **2 Critico, 4 Alto e 1 Moderado**; 5 divergências positivas e 2 negativas. A classificação considera impacto absoluto e recorrência do restaurante.
 - **Exercício 08:** painel executivo por restaurante com `LEFT JOIN`, `COALESCE` e indicadores agregados. Restaurante B: **41,67%** dos pedidos divergentes, **R$ 27,40** absolutos e **71,92%** do impacto total (prioridade didática `Critico`); Restaurante A: **R$ 6,20** (`Alto`); Restaurante C: **R$ 4,50** (`Moderado`).
 - **Exercício 09:** seis controles de integridade e financeiro com `UNION ALL`, CTEs e `CASE WHEN`: **5 OK**, **0 Falha** e **1 Revisar** (7 divergências de repasse). As ocorrências financeiras não são tratadas automaticamente como erros de qualidade.
+- **Exercício 10:** comparação de setembro/2026 (**18** pedidos concluídos; **4** divergentes; **22,22%**; **R$ 24,40** absolutos) e outubro/2026 (**12** concluídos; **3** divergentes; **25,00%**; **R$ 13,70** absolutos), com **+2,78 p.p.** de variação. Utiliza CTE de parâmetros, `LEFT JOIN`, `COALESCE`, `NULLIF` e `LAG()`; preserva intervalos sem pedidos.
 
 ## Como executar
 
@@ -66,6 +68,7 @@ py -3.13 scripts/executar_sql.py sql/06_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/07_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/08_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/09_exercicio.sql
+py -3.13 scripts/executar_sql.py sql/10_exercicio.sql
 ```
 
 Se não utiliza o Python Launcher do Windows, substitua `py -3.13` por `python`.
@@ -88,6 +91,7 @@ sql/06_exercicio.sql
 sql/07_exercicio.sql
 sql/08_exercicio.sql
 sql/09_exercicio.sql
+sql/10_exercicio.sql
 docs/diario_de_bordo.md
 .gitignore
 ```
