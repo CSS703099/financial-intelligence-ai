@@ -15,6 +15,7 @@
 - [x] Exercicio 05 — Evolucao mensal com CTEs e `LAG()`, nota **10/10**.
 - [x] Exercicio 06 — Ranking de divergencias e Pareto com funcoes de janela, nota **10/10**.
 - [x] Exercicio 07 — Deteccao por regras e alertas financeiros, nota **10/10**.
+- [x] Exercicio 08 — Painel executivo de risco por restaurante, nota **10/10**.
 
 ### Exercicio 01 — Indicadores dos pedidos concluidos
 - Quantidade de pedidos concluidos: **30**.
@@ -38,7 +39,7 @@
 Divergencia financeira nao comprova fraude, falha ou prejuizo. O modelo de repasse e simplificado e os registros sao artificiais. Repasse ao restaurante nao equivale a lucro.
 
 ### Proxima atividade
-Exercicios 01 a 07 concluidos e aprovados. Exercicio 08 ainda nao iniciado.
+Exercicios 01 a 08 concluidos e aprovados. Exercicio 09 ainda nao iniciado.
 
 ### Validacao do ambiente Git / GitHub — 2026-11-01
 
@@ -153,4 +154,27 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Interpretacao:** o Restaurante B concentra 5 dos 7 pedidos divergentes, justificando priorizacao de verificacao segundo as regras. Recomendacoes nao sao ordens de execucao; divergencia nao comprova fraude, erro ou prejuizo.
 
-**Estado:** Exercicio 07 aprovado, publicado e documentado; Exercicio 08 nao iniciado.
+**Estado naquela etapa:** Exercicio 07 aprovado, publicado e documentado; Exercicio 08 concluido posteriormente.
+
+### Exercicio 08 — Painel executivo de risco por restaurante (aprovado, 10/10)
+
+- **Arquivo:** `sql/08_exercicio.sql`, publicado na branch `main` do repositorio privado.
+- **Commit do aluno:** `40b0348` — `feat(sql): concluir exercicio 08 com painel executivo de risco`.
+- **Execucao local confirmada:** 3 linhas e 10 colunas na base sintetica de 36 pedidos, sendo 30 concluidos.
+- **Competencias:** CTEs, resumo de pedidos por restaurante, filtragem de divergencias, `COUNT(*) OVER (PARTITION BY restaurante)`, classificacao por `CASE WHEN`, agregacao condicional, `LEFT JOIN`, `COALESCE`, percentual de participacao e ordenacao pela prioridade.
+
+| Restaurante | Concluidos | Divergentes | Taxa de divergencia | Absoluta (R$) | Critico | Alto | Moderado | Participacao no impacto | Prioridade |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| B | 12 | 5 | 41,67% | 27,40 | 2 | 3 | 0 | 71,92% | Critico |
+| A | 6 | 1 | 16,67% | 6,20 | 0 | 1 | 0 | 16,27% | Alto |
+| C | 12 | 1 | 8,33% | 4,50 | 0 | 0 | 1 | 11,81% | Moderado |
+
+**Controles:** 30 pedidos concluidos, 7 divergentes, R$ 38,10 em divergencias absolutas, 2 alertas Critico, 4 Alto, 1 Moderado, 100% de participacao somada.
+
+**Interpretacao:** restaurante B tem prioridade de verificacao pelas regras didaticas, concentrando 71,92% do valor absoluto das divergencias e dois alertas criticos.
+
+**Limitacoes reconhecidas:** o `LEFT JOIN` preserva estabelecimentos com pedidos concluidos e nenhum alerta; para incluir estabelecimentos sem qualquer pedido concluido, seria necessario um cadastro completo de restaurantes. Uma base sem divergencias exige tratar explicitamente o denominador nulo ou zero no calculo de participacao.
+
+**Seguranca e escopo:** todos os registros sao ficticios; as regras nao comprovam fraude nem autorizam acoes financeiras automaticas. O painel ainda nao e uma interface visual interativa.
+
+**Estado:** Exercicio 08 aprovado, publicado e documentado. Exercicio 09 nao iniciado.
