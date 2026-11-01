@@ -34,7 +34,7 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 |---|---|---|
 | SQL — 12 exercícios e auditoria | Concluído | `sql/12_exercicio.sql`, `sql/12_auditoria.sql` |
 | Python 01 — indicadores via SQLite | **Aprovado 10/10 e publicado** | `scripts/indicadores_financeiros.py` |
-| Pandas e testes automatizados | Planejado | Ainda não implementado |
+| Python 02 — Pandas e testes automatizados | **Aprovado 10/10 e publicado** | `scripts/analise_pandas.py`, `tests/test_analise_pandas.py`, `requirements-mvp.txt` |
 | Dashboard interativo e simulações | Planejado | Ainda não implementado |
 | IA generativa com avaliação e revisão humana | Planejado, dependente de testes | Ainda não implementada |
 | Demonstração privada | Planejada, sujeita a autorização | Ainda não hospedada |
@@ -42,6 +42,10 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 **Python 01:** função `obter_indicadores()` abre o SQLite em modo somente leitura, executa uma consulta SQL parametrizada pelo estado do banco (sem entrada de parâmetros externos), recupera uma linha com `fetchone()` e devolve um dicionário. **11 de 11 indicadores conferidos** no dataset sintético: 36 pedidos, 30 concluídos, 6 cancelados, faturamento bruto R$ 4.687,60, taxas da plataforma R$ 609,40, taxas logísticas R$ 235,50, repasses R$ 3.820,60, 7 divergentes, diferença líquida R$ 22,10, soma absoluta R$ 38,10 e taxa 23,33%.
 
 **Limitações e melhorias programadas:** os indicadores não abrangem filtros interativos; em base sem pedidos, agregações `SUM()` podem retornar `NULL`; tratar exceções específicas e devolver código de saída diferente de zero em caso de falha; preparar testes de regressão antes do dashboard.
+
+**Python 02:** leitura da tabela `pedidos` via `pd.read_sql_query()` em conexão SQLite somente leitura; implementação independente dos mesmos **11 indicadores** com operações de Pandas em centavos inteiros; separação das funções `carregar_pedidos()` e `calcular_indicadores()`; preservação do DataFrame de entrada; taxa `None` quando não há pedidos concluídos. **5 testes `pytest` passaram** na execução local informada pelo aluno: equivalência SQL/Pandas, base vazia, cenário sem divergências, banco inexistente e preservação do DataFrame. Os **11 indicadores** batem com o CSV sintético original; etapa aprovada **10/10** e publicada no commit `3725d9a`.
+
+**Melhorias para o MVP:** adicionar testes com valores fixos de referência para o CSV, testar falhas com encerramento não zero, validar dados ausentes e tipos monetários antes da interface, além de preparar filtros interativos por período/restaurante.
 
 ## Problema de negócio
 
@@ -75,7 +79,7 @@ Divergência positiva indica que o repasse realizado ficou abaixo do esperado pe
 
 ## Como executar
 
-Requisitos: Python **3.9+**, sem dependências externas.
+Requisitos: Python para os scripts SQL/SQLite sem dependências externas; para a **fase MVP com Pandas/Pytest**, usar Python **3.13** e instalar as dependências listadas em `requirements-mvp.txt`.
 
 No terminal, aberto na raiz deste repositório:
 
@@ -96,6 +100,15 @@ py -3.13 scripts/executar_sql.py sql/11_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/12_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/12_auditoria.sql
 py -3.13 scripts/indicadores_financeiros.py
+```
+
+Para as dependências e testes do sprint MVP no Windows (Python 3.13):
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-mvp.txt
+.\.venv\Scripts\python.exe scripts/analise_pandas.py
+.\.venv\Scripts\python.exe -m pytest tests/test_analise_pandas.py -v
 ```
 
 Se não utiliza o Python Launcher do Windows, substitua `py -3.13` por `python`.
@@ -123,13 +136,16 @@ sql/11_exercicio.sql
 sql/12_exercicio.sql
 sql/12_auditoria.sql
 scripts/indicadores_financeiros.py
+scripts/analise_pandas.py
+tests/test_analise_pandas.py
+requirements-mvp.txt
 docs/diario_de_bordo.md
 .gitignore
 ```
 
 ## Próximas etapas
 
-**Formação inicial de SQL concluída; primeira integração Python/SQLite aprovada e publicada.** Próxima entrega: Pandas e testes automatizados; depois, dashboard interativo, simulação financeira, prompts avaliados e integração de IA com revisão humana, apenas se os fluxos mínimos estiverem validados. Essas funcionalidades futuras **ainda não estão implementadas**. Para uso profissional, ampliar testes de borda (inclusive ausência total de divergências), padronizar arredondamento por pedido e substituir valores esperados fixos por validações adequadas ao dataset em produção.
+**Formação inicial de SQL concluída; Python 01 e 02 aprovados e publicados.** Próxima entrega: **dashboard interativo Streamlit**, com filtros e indicadores financeiros, seguido de simulação e avaliação de recursos de IA sob revisão humana, se os fluxos mínimos estiverem validados. O dashboard e as funcionalidades de IA **ainda não estão implementados**. Para uso profissional, ampliar testes de borda (inclusive ausência total de divergências), padronizar arredondamento por pedido e substituir valores esperados fixos por validações adequadas ao dataset em produção.
 
 ## Segurança
 
