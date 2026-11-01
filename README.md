@@ -19,6 +19,7 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 | Exercício 06 — ranking e Pareto | Aprovado 10/10 | `sql/06_exercicio.sql` |
 | Exercício 07 — detecção por regras e alertas | Aprovado 10/10 | `sql/07_exercicio.sql` |
 | Exercício 08 — painel executivo de risco | Aprovado 10/10 | `sql/08_exercicio.sql` |
+| Exercício 09 — controles de qualidade e integridade | Aprovado 10/10 | `sql/09_exercicio.sql` |
 
 ## Problema de negócio
 
@@ -45,6 +46,7 @@ Divergência positiva indica que o repasse realizado ficou abaixo do esperado pe
 - **Exercício 06:** ranking de 7 pedidos divergentes; os 5 de maior magnitude somam **R$ 32,60**, ou **85,56%** do total absoluto de **R$ 38,10** (análise de Pareto didática).
 - **Exercício 07:** 7 alertas gerados por regras explicáveis: **2 Critico, 4 Alto e 1 Moderado**; 5 divergências positivas e 2 negativas. A classificação considera impacto absoluto e recorrência do restaurante.
 - **Exercício 08:** painel executivo por restaurante com `LEFT JOIN`, `COALESCE` e indicadores agregados. Restaurante B: **41,67%** dos pedidos divergentes, **R$ 27,40** absolutos e **71,92%** do impacto total (prioridade didática `Critico`); Restaurante A: **R$ 6,20** (`Alto`); Restaurante C: **R$ 4,50** (`Moderado`).
+- **Exercício 09:** seis controles de integridade e financeiro com `UNION ALL`, CTEs e `CASE WHEN`: **5 OK**, **0 Falha** e **1 Revisar** (7 divergências de repasse). As ocorrências financeiras não são tratadas automaticamente como erros de qualidade.
 
 ## Como executar
 
@@ -63,6 +65,7 @@ py -3.13 scripts/executar_sql.py sql/05_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/06_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/07_exercicio.sql
 py -3.13 scripts/executar_sql.py sql/08_exercicio.sql
+py -3.13 scripts/executar_sql.py sql/09_exercicio.sql
 ```
 
 Se não utiliza o Python Launcher do Windows, substitua `py -3.13` por `python`.
@@ -84,6 +87,7 @@ sql/05_exercicio.sql
 sql/06_exercicio.sql
 sql/07_exercicio.sql
 sql/08_exercicio.sql
+sql/09_exercicio.sql
 docs/diario_de_bordo.md
 .gitignore
 ```
