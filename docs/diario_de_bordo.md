@@ -19,6 +19,7 @@
 - [x] Exercicio 09 — Controles de qualidade e consistencia financeira, nota **10/10**.
 - [x] Exercicio 10 — Comparacao parametrizada de periodos, nota **10/10**.
 - [x] Exercicio 11 — Equivalencia financeira e analise de planos SQL, nota **10/10**.
+- [x] Exercicio 12 — Projeto integrador e auditoria final, nota **10/10**.
 
 ### Exercicio 01 — Indicadores dos pedidos concluidos
 - Quantidade de pedidos concluidos: **30**.
@@ -42,7 +43,7 @@
 Divergencia financeira nao comprova fraude, falha ou prejuizo. O modelo de repasse e simplificado e os registros sao artificiais. Repasse ao restaurante nao equivale a lucro.
 
 ### Proxima atividade
-Exercicios 01 a 11 concluidos e aprovados. Exercicio 12 ainda nao iniciado.
+Exercicios 01 a 12 concluidos, aprovados e publicados. Etapa SQL inicial encerrada; proxima fase planejada: Python/Pandas, ainda nao iniciada.
 
 ### Validacao do ambiente Git / GitHub — 2026-11-01
 
@@ -250,4 +251,36 @@ Consulta desenvolvida pelo aluno e validada no SQLite com a base original de 36 
 
 **Seguranca e limites:** demonstracao didatica com dados sinteticos, sem dados reais nem IA integrada. Indices e benchmarks exigiriam avaliacao adicional com volume de dados maior e planos comparaveis.
 
-**Progresso:** 11 de 12 exercicios aprovados na trilha SQL proposta; media **9,91/10**. Exercicio 12 ainda nao iniciado.
+**Progresso naquela etapa:** 11 de 12 exercicios aprovados; media **9,91/10**. O exercicio 12 foi concluido posteriormente.
+
+### Exercicio 12 — Projeto integrador e auditoria final (aprovado, 10/10)
+
+- **Arquivos:** `sql/12_exercicio.sql` e `sql/12_auditoria.sql`, publicados na branch `main` do repositorio privado.
+- **Commit do aluno:** `efbd9dc` — `feat(sql): concluir projeto integrador e auditoria final`.
+- **Confirmacao pelo aluno:** consulta principal executada com **6 linhas** e **11 colunas**; auditoria executada com **8 linhas** e **4 colunas**, todas as validacoes em `OK`.
+- **Competencias integradas:** CTEs, filtro temporal, conciliação de repasse, `ROUND`, `ABS`, `SUM(CASE WHEN ...)`, `GROUP BY`, `NULLIF`, `COALESCE`, `SUM(...) OVER ()`, `ROW_NUMBER()`, classificacao `CASE WHEN`, `UNION ALL` e controles de integridade.
+
+| Rank | Mes | Restaurante | Concluidos | Divergentes | Taxa | Divergencia liquida (R$) | Absoluta (R$) | Participacao | Prioridade |
+|---|---|---|---:|---:|---:|---:|---:|---:|---|
+| 1 | 2026-09 | B | 7 | 3 | 42,86% | +13,90 | 19,90 | 52,23% | Critico |
+| 2 | 2026-10 | B | 5 | 2 | 40,00% | -2,50 | 7,50 | 19,69% | Alto |
+| 3 | 2026-10 | A | 2 | 1 | 50,00% | +6,20 | 6,20 | 16,27% | Alto |
+| 4 | 2026-09 | C | 7 | 1 | 14,29% | +4,50 | 4,50 | 11,81% | Moderado |
+| 5 | 2026-09 | A | 4 | 0 | 0,00% | 0,00 | 0,00 | 0,00% | Sem alerta |
+| 6 | 2026-10 | C | 5 | 0 | 0,00% | 0,00 | 0,00 | 0,00% | Sem alerta |
+
+**Auditoria (todos OK):** `TOTAL_PEDIDOS = 36`; `CONCLUIDOS = 30`; `CANCELADOS = 6`; `PEDIDOS_DIVERGENTES = 7`; `DIVERGENCIA_LIQUIDA = 22,10`; `DIVERGENCIA_ABSOLUTA = 38,10`; `IDS_DUPLICADOS = 0`; `FALHAS_QUALIDADE = 0`.
+
+**Diagnostico executivo 5W2H:** as divergencias identificadas estao concentradas no Restaurante B, com R$ 27,40 (71,92%) da soma absoluta; recomenda-se auditoria dos repasses, das regras contratuais e dos comprovantes financeiros pelas equipes responsaveis. Observacoes recorrentes no dataset nao constituem prova de falha sistematica, fraude ou prejuizo.
+
+**Limitacoes e melhorias opcionais:** no cenario sem nenhuma divergencia, `participacao_impacto_pct` fica `NULL` devido ao denominador zero — tratar explicitamente na evolucao. Padronizar arredondamento por pedido no relatorio e na auditoria e separar testes fixos de regressao para este CSV de validacoes dinamicas para dados de producao. Dados 100% sinteticos; nao ha IA integrada nem acesso a operacao real do iFood.
+
+**Controle Git:** usuario confirmou `git push origin main`, commit `efbd9dc`, com o arquivo `sql/11_plano.sql` ainda nao rastreado e mantido apenas localmente.
+
+### Encerramento da etapa inicial SQL — 2026-11-01
+
+- **12 de 12 exercicios aprovados e publicados**, com media final **9,92/10** (119 pontos de 120 possiveis).
+- **Projeto integrador:** relatorio financeiro explicado por regras e auditoria de 8 indicadores.
+- **Competencias demonstradas:** filtros e agregacoes, conciliacao financeira, CTEs, funcoes de janela, ranking/Pareto, analise temporal, verificacoes de qualidade e leitura de planos de consulta.
+- **Proxima fase prevista (nao iniciada):** Python e Pandas para leitura, transformacao, validacao automatizada e testes financeiros; posteriormente dashboards e componentes de IA explicavel.
+- **Status da documentacao:** README e diario atualizados diretamente no GitHub apos publicacao do aluno. Para sincronizar o clone local, executar `git pull --ff-only`.
