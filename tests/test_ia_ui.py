@@ -1,0 +1,27 @@
+"""Testes AppTest da interface; não chamam API."""
+from pathlib import Path
+from streamlit.testing.v1 import AppTest
+
+RAIZ = Path(__file__).resolve().parents[1]
+
+
+def test_area_ia_exibe_evidencias_sem_chave(monkeypatch):
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    app = AppTest.from_file(str(RAIZ / "app.py"), default_timeout=20).run()
+    assert not app.exception
+    app.radio[0].set_value("IA — parecer explicável").run()
+    assert not app.exception
+    assert app.button(key="ia_gerar").disabled
+    assert any(b.label.startswith("Gerar parecer") and b.disabled for b in app.button)
+
+
+def test_troca_de_area_preserva_conciliacao():
+    app = AppTest.from_file(str(RAIZ / "app.py"), default_timeout=20).run()
+    assert not app.exception
+    assert len(app.metric) == 7
+    app.radio[0].set_value("Crédito — cenários 30+/90+").run()
+    assert not app.exception
+    assert len(app.metric) == 4
+    app.radio[0].set_value("Conciliação de repasses").run()
+    assert not app.exception
+    assert len(app.metric) == 7

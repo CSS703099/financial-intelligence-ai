@@ -11,6 +11,9 @@ from scripts.analise_pandas import (
     calcular_indicadores,
 )
 from scripts.simulador_credito import simular_cenario
+from scripts.ia_streamlit import renderizar_ia
+from scripts.demo_parecer_ui import renderizar_demo_offline
+from scripts.tema_visual import aplicar_tema, faixa_contexto
 from scripts.dashboard_dados import (
     filtrar_pedidos,
     preparar_detalhes,
@@ -41,6 +44,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+aplicar_tema()
 st.title("Financial Intelligence AI")
 
 st.caption(
@@ -62,6 +66,7 @@ area = st.sidebar.radio(
     [
         "Conciliação de repasses",
         "Crédito — cenários 30+/90+",
+        "IA — parecer explicável",
     ],
     key="area_analise",
 )
@@ -71,7 +76,15 @@ area = st.sidebar.radio(
 # 3. SIMULADOR DE CRÉDITO — 30+ E 90+
 # ============================================================
 
+if area == "IA — parecer explicável":
+    faixa_contexto("IA e governança", "Evidências auditáveis e aprovação humana", "MÓDULO 03")
+    renderizar_ia()
+    renderizar_demo_offline()
+    st.stop()
+
+
 if area == "Crédito — cenários 30+/90+":
+    faixa_contexto("Cenários 30+ e 90+", "Simulação hipotética, sem decisão automática", "MÓDULO 02")
 
     st.subheader(
         "Simulador de carteira de crédito — 30+ e 90+"
@@ -164,6 +177,8 @@ if area == "Crédito — cenários 30+/90+":
     # --------------------------------------------------------
     # 3.4. Indicadores financeiros
     # --------------------------------------------------------
+
+    st.session_state["ultimo_cenario_credito"] = resultado
 
     k1, k2, k3, k4 = st.columns(4)
 
@@ -266,6 +281,8 @@ if area == "Crédito — cenários 30+/90+":
 # ------------------------------------------------------------
 # 4.1. Carregamento do SQLite
 # ------------------------------------------------------------
+
+faixa_contexto("Conciliação de repasses", "Indicadores de pagamentos e divergências", "MÓDULO 01")
 
 try:
     pedidos = carregar_pedidos()
@@ -494,11 +511,10 @@ with visao:
                 "**Evolução mensal do impacto absoluto (R$)**"
             )
 
-            st.line_chart(
-                mensal,
-                x="mes",
-                y="impacto_absoluto",
-            )
+            # FI HOTFIX V1.2: mes categorico
+            mensal_grafico = mensal.copy()
+            mensal_grafico["Mês"] = mensal_grafico["mes"].dt.strftime("%m/%Y")
+            st.bar_chart(mensal_grafico, x="Mês", y="impacto_absoluto")
 
 
 # ------------------------------------------------------------
@@ -578,5 +594,5 @@ st.divider()
 st.caption(
     "Projeto independente de portfólio. "
     "Não representa dados ou operações reais do iFood. "
-    "Não há IA generativa integrada nesta etapa."
+    "IA generativa disponível apenas por clique na área de parecer e com chave de API."
 )

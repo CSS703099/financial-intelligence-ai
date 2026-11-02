@@ -1,5 +1,44 @@
 # Financial Intelligence AI — Finanças & Automação
 
+## Estado atual — MVP offline V1.5 (02/11/2026)
+
+**Status:** MVP offline validado em testes automatizados e revisado visualmente.
+
+### Funcionalidades
+
+- Conciliação financeira de pedidos sintéticos com SQLite e Pandas.
+- Dashboard Streamlit com filtros, indicadores, gráficos e exportação CSV.
+- Simulador determinístico de inadimplência 30+ e 90+.
+- Estrutura de IA explicável com evidências, validação e revisão humana.
+- Demonstração offline de pareceres manuais para crédito e repasses.
+- Exportação JSON condicionada à aprovação humana.
+- Rastreabilidade com hash SHA-256 do dossiê.
+
+### Qualidade e testes
+
+Em 02/11/2026, a suíte local apresentou **62 testes aprovados, 1 XFAIL esperado e nenhuma falha inesperada**.
+
+O XFAIL documenta uma limitação conhecida: o validador não detecta todas as contradições semânticas.
+
+### Limites da versão
+
+O projeto usa exclusivamente dados sintéticos e é independente do iFood.
+
+Os pareceres da demonstração offline são exemplos escritos manualmente, não produzidos por inteligência artificial.
+
+A chamada à OpenAI está implementada em código, mas sua operação real ainda não foi validada com sucesso. A hospedagem privada também está pendente.
+
+Nenhuma análise executa decisões financeiras automaticamente.
+
+### Executar localmente
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -v
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+As seções seguintes preservam o histórico técnico das etapas SQL e Python.
+
 Projeto independente de portfólio, desenvolvido com exercícios progressivos em SQL, Python e SQLite. Objetivo futuro: aplicar IA a análises financeiras e à automação de relatórios.
 
 > **Transparência:** base inteiramente **sintética**, sem dados internos ou vínculo de desenvolvimento com o iFood. **Ainda não há IA integrada nesta versão.** Os resultados são simulações, não resultados de produção.
