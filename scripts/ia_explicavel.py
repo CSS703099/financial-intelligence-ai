@@ -6,6 +6,7 @@ Os testes podem injetar um cliente falso e nunca acessam uma API real.
 from __future__ import annotations
 
 import hashlib
+import math
 import json
 import os
 import re
@@ -46,6 +47,8 @@ SCHEMA = {
 def _fato(codigo: str, rotulo: str, valor: Any, unidade: str = "") -> dict:
     if not isinstance(valor, (float, int)) or isinstance(valor, bool):
         raise ValueError("Valor numérico inválido nas evidências.")
+    if not math.isfinite(float(valor)):
+        raise ValueError("Valor numérico não finito nas evidências.")
     return {"id": codigo, "rotulo": rotulo, "valor": round(float(valor), 2), "unidade": unidade}
 
 
@@ -56,6 +59,29 @@ def criar_dossie_credito(resultado: dict) -> dict:
         raise ValueError("Resultado do simulador incompleto.")
     if resultado["nivel_alerta"] not in PRIORIDADES:
         raise ValueError("Prioridade não reconhecida.")
+    for chave in ("saldo_carteira", "taxa_30_base_pct", "taxa_30_cenario_pct", "taxa_90_base_pct", "taxa_90_cenario_pct", "delta_saldo_30", "delta_saldo_90", "variacao_30_pp", "variacao_90_pp"):
+        _fato("VALID", chave, resultado[chave])
+    if resultado["saldo_carteira"] < 0:
+        raise ValueError("Saldo de carteira negativo.")
+    for sufixo in ("base", "cenario"):
+        t30 = resultado[f"taxa_30_{sufixo}_pct"]
+        t90 = resultado[f"taxa_90_{sufixo}_pct"]
+        if not (0 <= t90 <= t30 <= 100):
+            raise ValueError("Taxas de crédito incoerentes.")
+    for faixa in (30, 90):
+        esperado = resultado[f"taxa_{faixa}_cenario_pct"] - resultado[f"taxa_{faixa}_base_pct"]
+        if not math.isclose(resultado[f"variacao_{faixa}_pp"], esperado, abs_tol=0.011):
+            raise ValueError("Variação de taxa incoerente.")
+        # Os saldos preservam centavos; taxas exibidas podem ter sido arredondadas.
+        base = resultado.get(f"saldo_{faixa}_base")
+        cenario = resultado.get(f"saldo_{faixa}_cenario")
+        if base is not None and cenario is not None:
+            _fato("VALID", "saldo base", base)
+            _fato("VALID", "saldo cenário", cenario)
+            if not (0 <= base <= resultado["saldo_carteira"] and 0 <= cenario <= resultado["saldo_carteira"]):
+                raise ValueError("Saldos de crédito incoerentes.")
+            if not math.isclose(resultado[f"delta_saldo_{faixa}"], cenario - base, abs_tol=0.011):
+                raise ValueError("Variação de saldo incoerente.")
     return {
         "tipo": "credito",
         "prioridade_calculada": resultado["nivel_alerta"],
@@ -81,7 +107,27 @@ def criar_dossie_repasses(indicadores: dict) -> dict:
         raise ValueError("Indicadores de repasses incompletos.")
     if indicadores["taxa_divergencia_pct"] is None:
         raise ValueError("Não é possível produzir parecer sem pedidos concluídos.")
-    prioridade = "Revisão necessária" if indicadores["pedidos_divergentes"] else "Sem alerta"
+    for chave in ("total_pedidos", "pedidos_concluidos", "pedidos_divergentes"):
+        valor = indicadores[chave]
+        if isinstance(valor, bool) or not isinstance(valor, int) or valor < 0:
+            raise ValueError("Contagem de repasses inválida.")
+    total = indicadores["total_pedidos"]
+    concluidos = indicadores["pedidos_concluidos"]
+    divergentes = indicadores["pedidos_divergentes"]
+    if not (0 < concluidos <= total and divergentes <= concluidos):
+        raise ValueError("Contagens de repasses incoerentes.")
+    for chave in ("taxa_divergencia_pct", "faturamento_bruto", "divergencia_absoluta", "divergencia_liquida"):
+        _fato("VALID", chave, indicadores[chave])
+    taxa = indicadores["taxa_divergencia_pct"]
+    if not (0 <= taxa <= 100) or not math.isclose(taxa, round(100 * divergentes / concluidos, 2), abs_tol=0.011):
+        raise ValueError("Taxa de divergência incoerente.")
+    if indicadores["faturamento_bruto"] < 0 or indicadores["divergencia_absoluta"] < 0:
+        raise ValueError("Valores financeiros incoerentes.")
+    if abs(indicadores["divergencia_liquida"]) > indicadores["divergencia_absoluta"] + 0.011:
+        raise ValueError("Divergência líquida superior à absoluta.")
+    if divergentes == 0 and (abs(indicadores["divergencia_liquida"]) > 0.011 or indicadores["divergencia_absoluta"] > 0.011):
+        raise ValueError("Divergências financeiras sem pedidos divergentes.")
+    prioridade = "Revisão necessária" if divergentes else "Sem alerta"
     return {
         "tipo": "repasses",
         "prioridade_calculada": prioridade,
@@ -114,6 +160,48 @@ def _validar_texto(texto: Any, local: str) -> None:
         raise ValueError(f"{local}: alegação não comprovada ou ação automática bloqueada.")
 
 
+
+def _validar_direcao_credito(parecer: dict, dossie: dict) -> None:
+    """Bloqueia afirmacoes direcionais explicitas em conflito com as taxas 30+/90+.
+
+    Controle conservador: nao interpreta negacao, ironia ou todas as formas
+    de linguagem natural. Casos ambiguos devem passar por revisao humana.
+    """
+    if dossie.get("tipo") != "credito":
+        return
+    fatos = {item["id"]: item["valor"] for item in dossie["evidencias"]}
+    mudancas = (fatos["C8"], fatos["C9"])
+    # Nao inferir uma direcao agregada se as faixas divergirem.
+    if all(v > 0.011 for v in mudancas):
+        direcao = "aumento"
+    elif all(v < -0.011 for v in mudancas):
+        direcao = "queda"
+    else:
+        return
+    diagnostico = parecer["diagnostico"].casefold()
+    import unicodedata
+    texto = "".join(c for c in unicodedata.normalize("NFD", diagnostico)
+                    if unicodedata.category(c) != "Mn")
+    # Checar somente declaracoes diretas sobre inadimplencia, sem negacao.
+    padrao = re.compile(
+        r"\b(?:inadimplencia|taxas? de atraso)\b"
+        r"[^.!?;]{0,65}?"
+        r"\b(caiu|cairam|diminuiu|diminuiram|reduziu|reduziram|"
+        r"aumentou|aumentaram|subiu|subiram|cresceu|cresceram)\b"
+    )
+    for trecho in re.split(r"[.!?;]", texto):
+        match = padrao.search(trecho)
+        if not match:
+            continue
+        verbo = match.group(1)
+        prefixo = trecho[:match.start(1)]
+        if re.search(r"\b(?:nao|nunca|jamais)\s+$", prefixo):
+            continue
+        queda = verbo in {"caiu", "cairam", "diminuiu", "diminuiram", "reduziu", "reduziram"}
+        if (direcao == "aumento" and queda) or (direcao == "queda" and not queda):
+            raise ValueError("Diagnostico contradiz a direcao das taxas de inadimplencia.")
+
+
 def validar_parecer(parecer: dict, dossie: dict) -> dict:
     """Valida conteúdo além do esquema JSON (sem garantia semântica completa)."""
     if not isinstance(parecer, dict) or set(parecer) != CHAVES_PARECER:
@@ -130,6 +218,7 @@ def validar_parecer(parecer: dict, dossie: dict) -> dict:
 
     for k in ("titulo", "diagnostico"):
         _validar_texto(parecer[k], k)
+    _validar_direcao_credito(parecer, dossie)
     refs_validas(parecer["evidencias_ids"], "Parecer")
     for k in ("acoes", "limitacoes"):
         if not isinstance(parecer[k], list) or not 1 <= len(parecer[k]) <= 4:
@@ -188,6 +277,11 @@ def gerar_parecer(dossie: dict, *, cliente=None, modelo: str | None = None) -> d
     return validar_parecer(parecer, dossie)
 
 
+def hash_parecer(parecer: dict) -> str:
+    """Identificador de conteúdo, NÃO assinatura digital autenticada."""
+    return hashlib.sha256(json.dumps(parecer, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
+
+
 def aprovar_parecer(parecer: dict, dossie: dict, *, aprovador: str) -> dict:
     """Gera um pacote exportável SOMENTE após aprovação humana explícita."""
     validar_parecer(parecer, dossie)
@@ -197,6 +291,7 @@ def aprovar_parecer(parecer: dict, dossie: dict, *, aprovador: str) -> dict:
         "status": "APROVADO_POR_HUMANO",
         "aprovador": aprovador.strip(),
         "dossie_sha256": hash_dossie(dossie),
+        "parecer_sha256": hash_parecer(parecer),
         "dossie": dossie,
         "parecer": parecer,
         "aviso": "Parecer descritivo de dados sintéticos; não autoriza decisão financeira.",

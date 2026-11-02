@@ -12,6 +12,7 @@ from scripts.ia_explicavel import (
     criar_dossie_repasses,
     gerar_parecer,
     hash_dossie,
+    hash_parecer,
 )
 from scripts.simulador_credito import simular_cenario
 
@@ -91,7 +92,14 @@ def renderizar_ia():
             st.error(str(erro))
 
     aprovado = st.session_state.get("ia_aprovacao")
-    if aprovado and aprovado.get("dossie_sha256") == identificador:
+    # A autorização é revogável nesta interface: qualquer mudança do revisor,
+    # confirmação ou parecer impede reutilizar o pacote aprovado anteriormente.
+    if aprovado and not autorizacao_valida(
+        aprovado, dossie, parecer, aprovador, confirmado
+    ):
+        st.session_state.pop("ia_aprovacao", None)
+        aprovado = None
+    if aprovado:
         st.success("Parecer aprovado explicitamente nesta sessão. Não houve envio ou ação financeira.")
         st.download_button(
             "Baixar parecer revisado (JSON)",
@@ -100,3 +108,16 @@ def renderizar_ia():
             mime="application/json",
             key="ia_download",
         )
+
+
+def autorizacao_valida(aprovacao: dict, dossie: dict, parecer: dict, revisor: str, confirmado: bool) -> bool:
+    """Verificação pura, testável sem sessão Streamlit."""
+    if not isinstance(aprovacao, dict) or not confirmado or not isinstance(revisor, str):
+        return False
+    return (
+        bool(revisor.strip())
+        and aprovacao.get("status") == "APROVADO_POR_HUMANO"
+        and aprovacao.get("aprovador") == revisor.strip()
+        and aprovacao.get("dossie_sha256") == hash_dossie(dossie)
+        and aprovacao.get("parecer_sha256") == hash_parecer(parecer)
+    )

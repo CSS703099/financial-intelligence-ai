@@ -54,10 +54,6 @@ def test_troca_de_cenario_invalida_hash_anterior():
     assert hash_dossie(original) != hash_dossie(novo)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Lacuna conhecida: o validador nao comprova o sentido de afirmacoes qualitativas contraditorias.",
-)
 def test_lacuna_semantica_taxa_aumentou_mas_texto_diz_caiu():
     dossie, parecer = montar_demo("credito")
     enganoso = deepcopy(parecer)

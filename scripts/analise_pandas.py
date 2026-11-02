@@ -1,4 +1,6 @@
 import sqlite3
+from decimal import Decimal, InvalidOperation, ROUND_HALF_EVEN
+import math
 from contextlib import closing
 from pathlib import Path
 import pandas as pd
@@ -27,6 +29,27 @@ def carregar_pedidos(caminho_banco=BANCO):
             conexao
         )
     return df
+
+def _centavos_validos(valor, coluna: str) -> int:
+    """Converte BRL em centavos sem arredondar valores inválidos silenciosamente."""
+    if isinstance(valor, (bool, complex)) or pd.isna(valor):
+        raise ValueError(f"{coluna}: valor monetário inválido.")
+    try:
+        numero = Decimal(str(valor))
+    except (InvalidOperation, ValueError, TypeError):
+        raise ValueError(f"{coluna}: valor monetário inválido.") from None
+    if not numero.is_finite() or numero < 0:
+        raise ValueError(f"{coluna}: valor monetário inválido.")
+    centavos = numero * 100
+    arredondado = centavos.quantize(Decimal("1"), rounding=ROUND_HALF_EVEN)
+    # Admite apenas resíduos de representação binária, não frações reais de centavo.
+    if abs(centavos - arredondado) > Decimal("0.000001"):
+        raise ValueError(f"{coluna}: mais de duas casas decimais.")
+    inteiro = int(arredondado)
+    if inteiro > 9_223_372_036_854_775_807:
+        raise ValueError(f"{coluna}: valor fora do intervalo suportado.")
+    return inteiro
+
 
 def calcular_indicadores(df: pd.DataFrame) -> dict:
     """
@@ -70,9 +93,12 @@ def calcular_indicadores(df: pd.DataFrame) -> dict:
         "repasse_real"
     ]
     for coluna in colunas_monetarias:
-        concluidos[f"{coluna}_centavos"] = (
-            concluidos[coluna] * 100
-        ).round().astype("int64")
+        concluidos[f"{coluna}_centavos"] = concluidos[coluna].map(
+            lambda valor: _centavos_validos(valor, coluna)
+        )
+
+    if ((concluidos["taxa_plataforma_centavos"] + concluidos["taxa_logistica_centavos"]) > concluidos["valor_bruto_centavos"]).any():
+        raise ValueError("Taxas superiores ao valor bruto do pedido.")
 
     # 4. Cálculo de repasse esperado e divergências em centavos
     # Repasse esperado = valor_bruto - taxa_plataforma - taxa_logistica

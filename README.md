@@ -1,47 +1,51 @@
 # Financial Intelligence AI — Finanças & Automação
 
-## Estado atual — MVP offline V1.5 (02/11/2026)
+## Estado atual — MVP offline V1.5.1 (02/11/2026)
 
-**Status:** MVP offline validado em testes automatizados e revisado visualmente.
+**Status:** correções de segurança e integridade implementadas e verificadas na suíte automatizada local. Versão ainda não publicada; integração real com API e hospedagem privada pendentes.
 
 ### Funcionalidades
 
 - Conciliação financeira de pedidos sintéticos com SQLite e Pandas.
 - Dashboard Streamlit com filtros, indicadores, gráficos e exportação CSV.
 - Simulador determinístico de inadimplência 30+ e 90+.
-- Estrutura de IA explicável com evidências, validação e revisão humana.
-- Demonstração offline de pareceres manuais para crédito e repasses.
-- Exportação JSON condicionada à aprovação humana.
-- Rastreabilidade com hash SHA-256 do dossiê.
+- Estrutura de IA explicável com evidências e revisão humana obrigatória.
+- Demonstração offline de pareceres **escritos manualmente** para crédito e repasses.
+- Exportação JSON condicionada à aprovação humana, vinculada ao dossiê, ao parecer e ao revisor.
+- Hashes SHA-256 para identificação e detecção de mudanças; **não constituem assinatura digital autenticada nem registro inviolável**.
+
+### Melhorias da V1.5.1
+
+1. **Aprovação humana:** verificação da confirmação, identidade do revisor e integridade do parecer e do dossiê antes de permitir exportação.
+2. **Integridade financeira:** validação de entradas monetárias e coerência de indicadores e evidências dos dossiês.
+3. **Consistência semântica:** regras determinísticas para rejeitar determinadas afirmações contraditórias sobre aumento ou queda de inadimplência. A cobertura é parcial e não garante veracidade universal.
 
 ### Qualidade e testes
 
-Em 02/11/2026, a suíte local apresentou **62 testes aprovados, 1 XFAIL esperado e nenhuma falha inesperada**.
+Em 02/11/2026, a suíte completa executada localmente no Windows apresentou **83 testes aprovados, 0 falhas e 0 XFAIL**, em **5,76 segundos**. `git diff --cached --check` não apresentou erros.
 
-O XFAIL documenta uma limitação conhecida: o validador não detecta todas as contradições semânticas.
+Os testes cobrem os casos implementados, mas **não certificam segurança de produção**, nem substituem revisão humana, testes de integração com API ou testes de implantação.
 
 ### Limites da versão
 
-O projeto usa exclusivamente dados sintéticos e é independente do iFood.
+O projeto utiliza dados sintéticos e é independente do iFood; não usa dados ou sistemas internos da empresa.
 
-Os pareceres da demonstração offline são exemplos escritos manualmente, não produzidos por inteligência artificial.
+Os pareceres da demonstração offline são exemplos manuais, **não respostas produzidas por um modelo de IA**. A chamada à API OpenAI existe no código, mas sua operação real ainda não foi validada com sucesso. A hospedagem privada permanece pendente.
 
-A chamada à OpenAI está implementada em código, mas sua operação real ainda não foi validada com sucesso. A hospedagem privada também está pendente.
-
-Nenhuma análise executa decisões financeiras automaticamente.
+O sistema não executa decisões financeiras automaticamente. As verificações semânticas são limitadas a padrões reconhecidos, e os hashes não substituem autenticação, autorização persistente ou auditoria imutável. O MVP não deve ser tratado como sistema financeiro de produção.
 
 ### Executar localmente
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest -v
+.\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-As seções seguintes preservam o histórico técnico das etapas SQL e Python.
+As seções seguintes preservam o **histórico técnico** das etapas SQL e Python. Situações e metas antigas refletem o momento em que foram registradas e não substituem o estado atual da V1.5.1 acima.
 
 Projeto independente de portfólio, desenvolvido com exercícios progressivos em SQL, Python e SQLite. Objetivo futuro: aplicar IA a análises financeiras e à automação de relatórios.
 
-> **Transparência:** base inteiramente **sintética**, sem dados internos ou vínculo de desenvolvimento com o iFood. **Ainda não há IA integrada nesta versão.** Os resultados são simulações, não resultados de produção.
+> **Transparência:** base inteiramente **sintética**, sem dados internos ou vínculo de desenvolvimento com o iFood. Há estrutura de integração com API, mas **nenhuma execução real de IA generativa foi validada**; os pareceres offline são manuais. Os resultados são simulações, não resultados de produção.
 
 ## Progresso — Dia 1
 
@@ -65,7 +69,7 @@ Projeto independente de portfólio, desenvolvido com exercícios progressivos em
 
 **Etapa SQL inicial encerrada em 2026-11-01:** **12 de 12 exercícios aprovados**, média final **9,92/10** (11 exercícios com nota 10 e o exercício 01 com nota 9). Código SQL e auditoria final publicados no repositório privado.
 
-## Sprint MVP — iFood GenAI (novembro/2026)
+## Histórico do sprint MVP — candidatura iFood GenAI (novembro/2026)
 
 **Objetivo:** preparar até **12/11/2026** uma demonstração funcional de portfólio para a candidatura pretendida até **13/11/2026** (prazo informado: **17/11/2026**). Datas de planejamento, não promessa de implantação. O projeto é **independente**, não utiliza dados ou sistemas internos do iFood.
 
