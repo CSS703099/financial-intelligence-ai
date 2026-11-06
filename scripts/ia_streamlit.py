@@ -21,6 +21,15 @@ from scripts.ia_explicavel import (
 from scripts.simulador_credito import simular_cenario
 
 
+
+def mensagem_publica_erro_api(erro: Exception) -> str:
+    """Mensagem segura para a interface, sem o conteudo bruto do erro da API."""
+    codigo = getattr(erro, "code", None)
+    if type(codigo) is int and 400 <= codigo <= 599:
+        return f"Falha na API de IA (HTTP {codigo}). Verifique a configuracao e a conectividade."
+    return "Falha na API de IA. Verifique a configuracao e a conectividade."
+
+
 def renderizar_ia():
     st.subheader("IA generativa — parecer financeiro com evidências")
     st.caption("Somente dados sintéticos. Geração mediante clique; a IA não calcula os números nem executa decisões.")
@@ -53,9 +62,9 @@ def renderizar_ia():
         st.session_state.pop("ia_aprovacao", None)
         atual = None
 
-    tem_chave = bool(os.environ.get("OPENAI_API_KEY"))
+    tem_chave = bool(os.environ.get("GEMINI_API_KEY"))
     if not tem_chave:
-        st.warning("OPENAI_API_KEY ausente. A interface e os testes funcionam sem IA real; nenhuma chamada foi feita.")
+        st.warning("GEMINI_API_KEY ausente. A interface e os testes funcionam sem IA real; nenhuma chamada foi feita.")
 
     if st.button("Gerar parecer com IA (pode gerar custo de API)", disabled=not tem_chave, key="ia_gerar"):
         st.session_state.pop("ia_parecer", None)
@@ -66,7 +75,10 @@ def renderizar_ia():
             st.session_state["ia_parecer"] = {"hash": identificador, "conteudo": parecer}
             st.success("Parecer estruturado validado automaticamente. Pendente de revisão humana.")
         except Exception as erro:
-            st.error(f"Parecer não aceito: {type(erro).__name__}. Nenhuma aprovação ocorreu.")
+            if isinstance(erro, ValueError):
+                st.error(f"Parecer rejeitado pelo validador: {erro}")
+            else:
+                st.error(mensagem_publica_erro_api(erro))
             st.caption("Confirme conectividade, saldo de API e modelo; se persistir, revise o log local.")
 
     atual = st.session_state.get("ia_parecer")
@@ -75,7 +87,20 @@ def renderizar_ia():
         return
 
     parecer = atual["conteudo"]
-    st.markdown("#### Parecer gerado — NÃO APROVADO")
+    aprovacao_anterior = st.session_state.get("ia_aprovacao")
+
+    status_valido = bool(
+        aprovacao_anterior and autorizacao_valida(
+            aprovacao_anterior,
+            dossie,
+            parecer,
+            st.session_state.get("ia_revisor", ""),
+            st.session_state.get("ia_confirma", False),
+        )
+    )
+
+    situacao = "APROVADO POR HUMANO" if status_valido else "N\u00c3O APROVADO"
+    st.markdown(f"#### Parecer gerado \u2014 {situacao}")
     st.write(f"**{parecer['titulo']}**")
     st.write(parecer["diagnostico"])
     st.write("**Evidências utilizadas:** " + ", ".join(parecer["evidencias_ids"]))
@@ -92,6 +117,7 @@ def renderizar_ia():
     if st.button("Aprovar parecer para exportação", disabled=not (confirmado and aprovador.strip()), key="ia_aprovar"):
         try:
             st.session_state["ia_aprovacao"] = aprovar_parecer(parecer, dossie, aprovador=aprovador)
+            st.rerun()
         except ValueError as erro:
             st.error(str(erro))
 

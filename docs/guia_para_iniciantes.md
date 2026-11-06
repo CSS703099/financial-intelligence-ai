@@ -1,10 +1,20 @@
 # Financial Intelligence AI — Guia para iniciantes
 
+## Atualizacao V1.6 — Gemini e revisao humana
+
+O projeto ja demonstrou chamadas reais a API Gemini para gerar pareceres de **credito simulado** e **conciliacao de repasses ficticios**. O Python calcula indicadores e prepara evidencias; o modelo redige diagnosticos e recomendacoes, que passam por validacao estruturada e verificacoes deterministicas. Limites e avisos sao adicionados pelo Python. A verificacao semantica e parcial: o texto gerado pode exigir correcao ou rejeicao humana.
+
+A interface so permite exportar um parecer apos identificacao e confirmacao explicita de um revisor. Mudancas no parecer, no dossie, na identidade ou na confirmacao invalidam a aprovacao da sessao. A exportacao JSON inclui hashes SHA-256, que nao equivalem a assinatura digital autenticada.
+
+Para habilitar a geracao real, configure a variavel de ambiente `GEMINI_API_KEY` com uma chave propria do Google AI Studio e inicie o Streamlit pelo mesmo ambiente. `GEMINI_MODEL` permite escolher outro modelo disponivel. Nao publique chaves. O modo offline utiliza exemplos manuais e nao faz chamadas reais.
+
+Em 06/11/2026, a ultima execucao da suite local informou **88 testes aprovados**. Foram realizados testes manuais de geracao, revisao e exportacao. Isso nao constitui certificacao de seguranca ou liberacao para producao.
+
 ## O que é este projeto?
 
 É um laboratório de finanças e automação com **dados inteiramente fictícios**. Ele ajuda a identificar diferenças entre valores esperados e repasses, visualizar indicadores e experimentar cenários hipotéticos de atraso de crédito.
 
-A demonstração offline usa **pareceres escritos manualmente**. Existe código para chamar uma API de IA, mas a execução real ainda precisa ser validada. Nenhuma decisão financeira é executada automaticamente.
+A demonstracao offline usa **pareceres escritos manualmente**. A V1.6 tambem realiza geracao real de pareceres com Gemini, sob validacao e revisao humana. Nenhuma decisao financeira e executada automaticamente.
 
 ## Entenda o fluxo
 
@@ -26,7 +36,7 @@ A demonstração offline usa **pareceres escritos manualmente**. Existe código 
 | `scripts/analise_pandas.py` | Carrega os pedidos e calcula métricas de conciliação usando Python e Pandas. | Valida valores monetários e preserva os dados de entrada. |
 | `scripts/dashboard_dados.py` | Filtra pedidos e prepara tabelas resumidas por restaurante e período. | Separa a lógica de dados dos elementos visuais do Streamlit. |
 | `scripts/simulador_credito.py` | Simula mudanças hipotéticas nas faixas de atraso de 30 e 90 dias. | É uma simulação por regras; não prevê o futuro nem toma decisões de crédito. |
-| `scripts/ia_explicavel.py` | Monta dossiês verificáveis, define o formato de parecer, valida respostas e controla a aprovação humana. | A integração de LLM existe em código, mas a execução real da API ainda não foi validada. |
+| `scripts/ia_explicavel.py` | Monta dossiês verificáveis, define o formato de parecer, valida respostas e controla a aprovação humana. | A chamada Gemini ja foi demonstrada localmente; evidencias e saidas passam por validacoes deterministicas, com cobertura semantica parcial. |
 | `scripts/ia_streamlit.py` | Mostra evidências, permite solicitar um parecer por API quando configurada e exige revisão. | Sem chave configurada, não faz chamada real; o usuário deve aprovar antes da exportação. |
 | `scripts/demo_parecer_offline.py` | Monta exemplos de pareceres escritos manualmente para demonstrar validação e revisão. | Não chama modelo de IA e não deve ser apresentado como geração automática. |
 | `scripts/demo_parecer_ui.py` | Apresenta os pareceres manuais e o fluxo de revisão no Streamlit. | Os exemplos são fixos e independentes dos controles de outros módulos. |
@@ -99,6 +109,6 @@ Arquivos em `tests/` verificam que partes do programa continuam funcionando depo
 
 - Dados sintéticos e independência em relação ao iFood.
 - Pareceres offline manuais, não gerados por LLM.
-- Integração real de API ainda não validada.
+- Integracao Gemini demonstrada localmente; nao foi realizada implantacao de producao.
 - Verificações semânticas parciais; não garantem ausência de erros.
 - Sem implantação de produção ou decisão financeira automática.
