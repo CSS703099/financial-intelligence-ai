@@ -172,3 +172,20 @@ def test_bloqueio_automatico_com_ambas_grafias_rejeitado():
     for texto in ("bloqueio automatico", "bloqueio autom\u00e1tico"):
         with pytest.raises(ValueError, match="alega"):
             _validar_texto(texto, "diagnostico", set())
+
+
+def test_acao_texto_aceita_ids_validos(dossie, parecer):
+    parecer["acoes"][0]["acao"] = "Verificar as variacoes C8 e C9."
+    assert validar_parecer(parecer, dossie) == parecer
+
+
+def test_acao_texto_rejeita_id_inventado(dossie, parecer):
+    parecer["acoes"][0]["acao"] = "Investigar a evidencia C999."
+    with pytest.raises(ValueError, match="inventada"):
+        validar_parecer(parecer, dossie)
+
+
+def test_acao_texto_rejeita_valor_numerico_livre(dossie, parecer):
+    parecer["acoes"][0]["acao"] = "Investigar R$ 900000 conforme C8."
+    with pytest.raises(ValueError, match="numérica"):
+        validar_parecer(parecer, dossie)
