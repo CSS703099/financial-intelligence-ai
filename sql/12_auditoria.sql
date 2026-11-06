@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Confere a consistência dos resultados do exercício integrador.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 WITH metricas_observadas AS (
     -- 1. TOTAL_PEDIDOS
     SELECT 'TOTAL_PEDIDOS' AS controle, COUNT(*) AS valor_obs, 36 AS valor_esp FROM pedidos

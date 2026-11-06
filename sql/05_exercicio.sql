@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Compara períodos e usa LAG para observar a evolução.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 WITH mensal AS (
     -- Etapa 1: Consolidar os dados brutos por mês
     SELECT 

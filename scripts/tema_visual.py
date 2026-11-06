@@ -3,6 +3,10 @@
 Estilos são locais ao Streamlit e não carregam fontes/scripts externos.
 Não é uma identidade oficial do iFood nem da OpenAI.
 """
+
+# GUIA PARA INICIANTES — Identidade visual
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from html import escape
 
 CSS = r"""

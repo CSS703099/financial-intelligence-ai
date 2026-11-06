@@ -1,4 +1,8 @@
 """Auditoria offline independente da API, sem custos de geração."""
+
+# GUIA PARA INICIANTES — Testes de pareceres manuais sem chamada à IA
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from copy import deepcopy
 
 import pytest

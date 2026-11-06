@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Confere equivalência de consultas e planos SQL.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 WITH base_calculada AS (
     -- Etapa prévia: calcular valores e garantir que data_pedido seja incluída
     SELECT 

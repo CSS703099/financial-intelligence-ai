@@ -6,6 +6,10 @@ O saldo 90+ é subconjunto do saldo 30+. NÃO usa a base de pedidos.
 Não é previsão, decisão de crédito ou modelo de IA.
 """
 
+# GUIA PARA INICIANTES — Cenários de inadimplência
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
+
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 CENTAVO = Decimal("0.01")

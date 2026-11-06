@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Produz uma visão consolidada para acompanhamento executivo.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 WITH base_pedidos AS (
     -- Etapa 1: Preparação financeira de todos os pedidos concluídos
     SELECT 

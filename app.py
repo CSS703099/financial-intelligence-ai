@@ -1,6 +1,10 @@
 
 """Dashboard privado e local para estudo, com dados sintéticos."""
 
+# GUIA PARA INICIANTES — Painel principal
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
+
 import sqlite3
 
 import pandas as pd

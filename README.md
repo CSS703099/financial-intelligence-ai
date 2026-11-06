@@ -1,3 +1,5 @@
+> **Novo por aqui?** Leia o [guia para iniciantes](docs/guia_para_iniciantes.md) para entender cada arquivo, o fluxo de dados e os limites do projeto.
+
 # Financial Intelligence AI — Finanças & Automação
 
 ## Estado atual — MVP offline V1.5.1 (02/11/2026)

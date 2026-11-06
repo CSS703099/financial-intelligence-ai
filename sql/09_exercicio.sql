@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Verifica qualidade e integridade dos dados.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 WITH testes_qualidade AS (
     -- 1. ID_DUPLICADO: Verifica se há IDs repetidos (com o FROM pedidos adicionado!)
     SELECT 

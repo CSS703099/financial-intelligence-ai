@@ -3,6 +3,10 @@
 Usa SOMENTE os cenários FIXOS didáticos de demo_parecer_offline;
 não consome os sliders nem filtros atuais de outros módulos.
 """
+
+# GUIA PARA INICIANTES — Tela da demonstração offline
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from __future__ import annotations
 
 import json

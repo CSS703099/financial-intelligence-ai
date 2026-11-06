@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Agrupa indicadores por restaurante.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 SELECT
      restaurante,
      COUNT(*) AS pedidos_concluidos,

@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Compara períodos usando parâmetros.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 WITH parametros AS (
     -- Etapa 1: Definir os intervalos de datas configuráveis
     SELECT 

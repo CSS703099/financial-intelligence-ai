@@ -2,6 +2,10 @@
 
 Testes não fazem chamadas à API nem autorizam operações financeiras.
 """
+
+# GUIA PARA INICIANTES — Testes de regressões da interface da versão 1.5
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from pathlib import Path
 
 import pytest

@@ -2,6 +2,10 @@
 
 Não mede taxa de alucinação de um LLM real. Mede apenas bloqueios específicos.
 """
+
+# GUIA PARA INICIANTES — Teste adversarial de regras
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from copy import deepcopy
 
 from scripts.ia_explicavel import criar_dossie_credito, validar_parecer

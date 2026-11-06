@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Organiza resultados com CTE e critérios de prioridade.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 WITH resumo_restaurantes AS (
     SELECT 
         restaurante,

@@ -1,3 +1,7 @@
+
+# GUIA PARA INICIANTES — Testes de contradições semânticas específicas
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from copy import deepcopy
 import pytest
 from scripts.demo_parecer_offline import montar_demo

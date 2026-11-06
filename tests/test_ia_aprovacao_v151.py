@@ -1,4 +1,8 @@
 """Regressões de autorização, sem API externa."""
+
+# GUIA PARA INICIANTES — Testes de vínculo entre revisor, dossiê e parecer
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from copy import deepcopy
 from scripts.ia_explicavel import aprovar_parecer, criar_dossie_credito, hash_parecer
 from scripts.ia_streamlit import autorizacao_valida

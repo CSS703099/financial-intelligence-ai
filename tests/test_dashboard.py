@@ -1,4 +1,8 @@
 """Testes do dashboard Python 03 (não modificam o SQLite original)."""
+
+# GUIA PARA INICIANTES — Testes de filtros e dados usados no painel
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from datetime import date
 from pathlib import Path
 

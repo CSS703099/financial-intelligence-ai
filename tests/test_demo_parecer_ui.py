@@ -1,4 +1,8 @@
 """Testes de governança da interface offline — sem chamadas de API."""
+
+# GUIA PARA INICIANTES — Testes de fluxo visual de revisão da demonstração
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 import pytest
 
 from scripts.demo_parecer_offline import montar_demo

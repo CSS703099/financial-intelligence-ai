@@ -3,6 +3,10 @@
 Somente dados sintéticos. Nenhuma ação externa de crédito é implementada.
 Os testes podem injetar um cliente falso e nunca acessam uma API real.
 """
+
+# GUIA PARA INICIANTES — Evidências, parecer e revisão
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from __future__ import annotations
 
 import hashlib

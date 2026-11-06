@@ -1,4 +1,8 @@
 """Executa consultas SELECT escritas em arquivo .sql (sem bibliotecas extras)."""
+
+# GUIA PARA INICIANTES — Executor SQL
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 import sqlite3
 import re
 import sys

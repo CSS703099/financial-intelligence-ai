@@ -3,6 +3,10 @@
 O dashboard usa somente dados sintéticos. Os cálculos financeiros
 respeitam centavos inteiros e não alteram a entrada.
 """
+
+# GUIA PARA INICIANTES — Preparação dos gráficos
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from datetime import date
 
 import pandas as pd

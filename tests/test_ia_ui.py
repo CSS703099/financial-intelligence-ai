@@ -1,4 +1,8 @@
 """Testes AppTest da interface; não chamam API."""
+
+# GUIA PARA INICIANTES — Testes de comportamento da tela de IA
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from pathlib import Path
 from streamlit.testing.v1 import AppTest
 

@@ -1,4 +1,8 @@
 """Testes de integridade de markup sem dependências de rede/API."""
+
+# GUIA PARA INICIANTES — Testes de estilos e elementos visuais
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from scripts.tema_visual import CSS, contexto_html
 
 

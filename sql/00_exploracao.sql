@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Explora os registros para conhecer a tabela de pedidos.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 -- Dia 1: consulta exploratoria (dados sinteticos).
 -- Exibe os primeiros dez pedidos, sem filtro de status.
 SELECT

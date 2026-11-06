@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Integra os exercícios anteriores em uma análise final.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 WITH base_calculada AS (
     -- Etapa 1: Filtrar pedidos concluídos no período e calcular divergências por pedido
     SELECT 

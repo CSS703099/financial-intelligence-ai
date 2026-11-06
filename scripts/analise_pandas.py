@@ -1,3 +1,7 @@
+
+# GUIA PARA INICIANTES — Indicadores em Pandas
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 import sqlite3
 from decimal import Decimal, InvalidOperation, ROUND_HALF_EVEN
 import math

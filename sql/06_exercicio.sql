@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Cria ranking e análise de concentração (Pareto).
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 WITH base_pedidos AS (
     -- Etapa 1: Filtrar pedidos concluídos e calcular as divergências
     SELECT 

@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Calcula os primeiros indicadores financeiros.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 -- Dia 1 / Exercicio 01 — Indicadores financeiros
 -- Consulta desenvolvida pelo aluno e aprovada com nota 9/10.
 SELECT

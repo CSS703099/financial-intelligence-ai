@@ -1,4 +1,8 @@
 """Testes do motor determinístico (independente de Streamlit e do SQLite)."""
+
+# GUIA PARA INICIANTES — Testes de regras e limites do simulador 30+/90+
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 import math
 
 import pytest

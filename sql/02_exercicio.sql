@@ -1,3 +1,6 @@
+-- GUIA PARA INICIANTES: Compara valores para identificar divergências de conciliação.
+-- Consultas de estudo com dados sintéticos; veja docs/guia_para_iniciantes.md.
+
 -- Dia 1 / Exercicio 02 — Conciliacao financeira
 -- Consulta desenvolvida pelo aluno, corrigida e aprovada com nota 10/10.
 -- Diferenca positiva: repasse real menor que o esperado.

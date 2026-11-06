@@ -1,4 +1,8 @@
 """Regressão: alternar cenário não pode deixar prioridade/IDs do anterior na interface."""
+
+# GUIA PARA INICIANTES — Testes de regressões da interface da versão 1.4
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 from pathlib import Path
 
 from streamlit.testing.v1 import AppTest

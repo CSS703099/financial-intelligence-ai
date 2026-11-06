@@ -1,4 +1,8 @@
 """Gera banco SQLite local a partir de dados sinteticos. Usa apenas Python padrao."""
+
+# GUIA PARA INICIANTES — Preparação do banco
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 import csv
 import sqlite3
 from pathlib import Path

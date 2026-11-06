@@ -1,3 +1,7 @@
+
+# GUIA PARA INICIANTES — Testes de cálculos financeiros e tratamento dos dados
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 import pytest
 import pandas as pd
 from scripts.indicadores_financeiros import obter_indicadores

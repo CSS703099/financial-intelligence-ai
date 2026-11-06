@@ -1,4 +1,8 @@
 """Testes locais: não chamam API nem geram custos."""
+
+# GUIA PARA INICIANTES — Testes de evidências, formato e validação de pareceres
+# Leia a explicação completa em docs/guia_para_iniciantes.md.
+# Comentários são apenas explicações: não mudam o comportamento do programa.
 import json
 from types import SimpleNamespace
 
