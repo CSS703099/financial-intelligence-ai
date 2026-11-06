@@ -10,7 +10,7 @@ RAIZ = Path(__file__).resolve().parents[1]
 
 
 def test_area_ia_exibe_evidencias_sem_chave(monkeypatch):
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     app = AppTest.from_file(str(RAIZ / "app.py"), default_timeout=20).run()
     assert not app.exception
     app.radio[0].set_value("IA — parecer explicável").run()

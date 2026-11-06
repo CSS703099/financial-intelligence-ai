@@ -7,3 +7,4 @@ __pycache__/
 financial_intelligence.db
 .DS_Store
 .vscode/
+.streamlit/secrets.toml

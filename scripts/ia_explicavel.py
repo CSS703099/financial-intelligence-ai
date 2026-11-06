@@ -152,16 +152,41 @@ def hash_dossie(dossie: dict) -> str:
     return hashlib.sha256(json.dumps(dossie, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
 
 
-def _validar_texto(texto: Any, local: str) -> None:
+def _validar_texto(texto: Any, local: str, ids_validos=None) -> None:
     if not isinstance(texto, str) or not texto.strip() or len(texto) > 1000:
-        raise ValueError(f"{local}: texto ausente, inválido ou muito extenso.")
-    # Permitir apenas os rótulos de faixas 30+/90+. Outros números, moedas,
-    # percentuais e contagens devem aparecer no painel determinístico de evidências.
-    sem_faixas = re.sub(r"(?<!\d)(30|90)\+", "FAIXA", texto)
-    if re.search(r"\d", sem_faixas):
-        raise ValueError(f"{local}: afirmação numérica livre bloqueada; cite o ID da evidência.")
-    if re.search(r"\b(fraude\s+(confirmada|comprovada)|perda\s+comprovada|lucro\s+garantido|bloqueio\s+autom[aá]tico)\b", texto, flags=re.I):
-        raise ValueError(f"{local}: alegação não comprovada ou ação automática bloqueada.")
+        raise ValueError(f"{local}: texto ausente, inv\u00e1lido ou muito extenso.")
+
+    sem_faixas = re.sub(r"(?<!\w)(30|90)\+(?!\w)", "FAIXA", texto)
+
+    def substituir_id(match):
+        identificador = match.group(0)
+
+        if ids_validos is not None and identificador in ids_validos:
+            return "EVIDENCIA"
+
+        raise ValueError(
+            f"{local}: refer\u00eancia inventada ou n\u00e3o autorizada."
+        )
+
+    sem_ids = re.sub(
+        r"(?<!\w)[CR]\d+(?!\w)",
+        substituir_id,
+        sem_faixas
+    )
+
+    if re.search(r"\d", sem_ids):
+        raise ValueError(
+            f"{local}: afirma\u00e7\u00e3o num\u00e9rica livre bloqueada; cite o ID da evid\u00eancia."
+        )
+
+    if re.search(
+        r"\b(fraude\s+(confirmada|comprovada)|perda\s+comprovada|lucro\s+garantido|bloqueio\s+autom[a\u00e1]tico)\b",
+        texto,
+        flags=re.I
+    ):
+        raise ValueError(
+            f"{local}: alega\u00e7\u00e3o n\u00e3o comprovada ou a\u00e7\u00e3o autom\u00e1tica bloqueada."
+        )
 
 
 
@@ -221,7 +246,7 @@ def validar_parecer(parecer: dict, dossie: dict) -> dict:
             raise ValueError(f"{local}: referência ausente ou inventada.")
 
     for k in ("titulo", "diagnostico"):
-        _validar_texto(parecer[k], k)
+        _validar_texto(parecer[k], k, ids_validos)
     _validar_direcao_credito(parecer, dossie)
     refs_validas(parecer["evidencias_ids"], "Parecer")
     for k in ("acoes", "limitacoes"):
@@ -250,35 +275,92 @@ INSTRUCOES = (
 )
 
 
+
+SCHEMA_GEMINI = {
+    **SCHEMA,
+    "properties": {
+        chave: valor for chave, valor in SCHEMA["properties"].items()
+        if chave != "limitacoes"
+    },
+    "required": [chave for chave in SCHEMA["required"] if chave != "limitacoes"],
+}
+
+# O campo limitacoes pertence ao Python, nao ao modelo.
+INSTRUCOES_GEMINI = (
+    "Voce e um assistente de analise financeira com dados exclusivamente sinteticos. "
+    "Responda em portugues, somente com o objeto JSON do esquema fornecido. "
+    "Copie exatamente prioridade_calculada, sem alterar o valor. "
+    "Use somente IDs de evidencias existentes no dossie para referenciar dados. "
+    "Nao inclua numeros em texto livre, exceto os nomes das faixas 30+ e 90+ e IDs. "
+    "Nao inclua a chave limitacoes: o Python a acrescenta apos validar a estrutura. "
+    "Nao afirme fraude, perda comprovada, causalidade, migracao individual de ativos, "
+    "segmentos afetados nem comportamento futuro a partir de indicadores agregados. "
+    "Recomende apenas verificacoes sujeitas a revisao humana, sem executar acoes. "
+    "Defina revisao_humana_obrigatoria como true."
+)
+
+LIMITACOES_PADRAO = (
+    "Os dados sao sinteticos e nao representam operacoes financeiras reais.",
+    "Os indicadores agregados nao demonstram causas ou resultados futuros.",
+    "As conclusoes dependem de verificacao e revisao humana."
+)
+
+
+def padronizar_limitacoes(parecer: dict) -> dict:
+    if not isinstance(parecer, dict):
+        raise ValueError("Parecer deve ser um objeto JSON.")
+
+    if "limitacoes" in parecer:
+        raise ValueError("Campo limitacoes enviado pelo modelo; resposta rejeitada.")
+    if set(parecer) != set(SCHEMA_GEMINI["properties"]):
+        raise ValueError("Campos ausentes ou inesperados no parecer do modelo.")
+
+    return {
+        **parecer,
+        "limitacoes": list(LIMITACOES_PADRAO)
+    }
+
+
 def gerar_parecer(dossie: dict, *, cliente=None, modelo: str | None = None) -> dict:
-    """Chama um LLM de verdade somente quando solicitado; permite cliente mock nos testes."""
+    """Gera parecer via Gemini; cliente injetado permite testes sem API."""
     if dossie.get("tipo") not in TIPOS:
         raise ValueError("Tipo de dossiê inválido.")
     if not dossie.get("evidencias"):
         raise ValueError("Dossiê sem evidências.")
     if cliente is None:
-        if not os.environ.get("OPENAI_API_KEY"):
-            raise RuntimeError("OPENAI_API_KEY não configurada; nenhum modelo foi chamado.")
-        from openai import OpenAI
-        cliente = OpenAI(timeout=25.0, max_retries=0)
-    resposta = cliente.responses.create(
-        model=modelo or os.environ.get("OPENAI_MODEL", "gpt-5-mini"),
-        instructions=INSTRUCOES,
-        input=json.dumps(dossie, ensure_ascii=False, sort_keys=True),
-        text={"format": {"type": "json_schema", "name": "parecer_financeiro", "strict": True, "schema": SCHEMA}},
-        store=False,
-        max_output_tokens=1800,
-    )
-    if getattr(resposta, "status", "completed") != "completed":
-        raise ValueError("Resposta incompleta do modelo; descarte e tente novamente.")
-    conteudo = getattr(resposta, "output_text", None)
-    if not conteudo:
-        raise ValueError("Modelo recusou ou não forneceu JSON validável.")
+        chave = os.environ.get("GEMINI_API_KEY")
+        if not chave:
+            raise RuntimeError("GEMINI_API_KEY não configurada; nenhum modelo foi chamado.")
+        from google import genai
+        cliente = genai.Client(api_key=chave, http_options={"timeout": 25000})
+        fechar_cliente = True
+    else:
+        fechar_cliente = False
     try:
-        parecer = json.loads(conteudo)
-    except json.JSONDecodeError as erro:
-        raise ValueError("Resposta da IA não é um JSON válido.") from erro
-    return validar_parecer(parecer, dossie)
+        from google.genai import types
+        resposta = cliente.models.generate_content(
+            model=modelo or os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite"),
+            contents=json.dumps(dossie, ensure_ascii=False, sort_keys=True),
+            config=types.GenerateContentConfig(
+                system_instruction=INSTRUCOES_GEMINI,
+                response_mime_type="application/json",
+                response_json_schema=SCHEMA_GEMINI,
+                max_output_tokens=1800,
+                temperature=0.2,
+            ),
+        )
+        conteudo = getattr(resposta, "text", None)
+        if not conteudo:
+            raise ValueError("Modelo não forneceu JSON validável.")
+        try:
+            parecer = json.loads(conteudo)
+        except json.JSONDecodeError as erro:
+            raise ValueError("Resposta da IA não é um JSON válido.") from erro
+        parecer = padronizar_limitacoes(parecer)
+        return validar_parecer(parecer, dossie)
+    finally:
+        if fechar_cliente:
+            cliente.close()
 
 
 def hash_parecer(parecer: dict) -> str:

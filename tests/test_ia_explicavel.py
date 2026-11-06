@@ -10,6 +10,7 @@ import pytest
 
 from scripts.simulador_credito import simular_cenario
 from scripts.ia_explicavel import (
+    SCHEMA,
     aprovar_parecer, criar_dossie_credito, criar_dossie_repasses,
     gerar_parecer, hash_dossie, validar_parecer,
 )
@@ -93,28 +94,45 @@ def test_cliente_falso_reproduz_chamada_e_esquema(dossie, parecer):
     class ClienteFalso:
         def __init__(self):
             self.kwargs = None
-            self.responses = self
-        def create(self, **kwargs):
+            self.models = self
+        def generate_content(self, **kwargs):
             self.kwargs = kwargs
-            return SimpleNamespace(status="completed", output_text=json.dumps(parecer))
+            return SimpleNamespace(text=json.dumps({k: v for k, v in parecer.items() if k != "limitacoes"}))
     cliente = ClienteFalso()
     resultado = gerar_parecer(dossie, cliente=cliente, modelo="modelo-ficticio")
-    assert resultado == parecer
-    assert cliente.kwargs["text"]["format"]["strict"] is True
-    assert cliente.kwargs["store"] is False
+    from scripts.ia_explicavel import LIMITACOES_PADRAO
+    assert resultado == {**parecer, "limitacoes": list(LIMITACOES_PADRAO)}
+    assert resultado["limitacoes"] is not parecer["limitacoes"]
     assert cliente.kwargs["model"] == "modelo-ficticio"
+    assert cliente.kwargs["config"].response_mime_type == "application/json"
+    from scripts.ia_explicavel import SCHEMA_GEMINI
+    assert cliente.kwargs["config"].response_json_schema == SCHEMA_GEMINI
 
 
 def test_json_invalido_rejeitado(dossie):
-    cliente = SimpleNamespace(responses=SimpleNamespace(create=lambda **_: SimpleNamespace(status="completed", output_text="não é json")))
+    cliente = SimpleNamespace(models=SimpleNamespace(generate_content=lambda **_: SimpleNamespace(text="não é json")))
     with pytest.raises(ValueError, match="JSON"):
         gerar_parecer(dossie, cliente=cliente)
 
 
 def test_sem_chave_nao_chama_api(dossie, monkeypatch):
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    with pytest.raises(RuntimeError, match="OPENAI_API_KEY"):
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    with pytest.raises(RuntimeError, match="GEMINI_API_KEY"):
         gerar_parecer(dossie)
+
+
+def test_resposta_vazia_rejeitada(dossie):
+    cliente = SimpleNamespace(models=SimpleNamespace(generate_content=lambda **_: SimpleNamespace(text=None)))
+    with pytest.raises(ValueError, match="JSON"):
+        gerar_parecer(dossie, cliente=cliente)
+
+
+def test_falha_api_nao_gera_aprovacao(dossie):
+    def falhar(**kwargs):
+        raise RuntimeError("API temporariamente indisponível")
+    cliente = SimpleNamespace(models=SimpleNamespace(generate_content=falhar))
+    with pytest.raises(RuntimeError, match="indisponível"):
+        gerar_parecer(dossie, cliente=cliente)
 
 
 def test_repasses_dados_sinteticos():
@@ -127,3 +145,30 @@ def test_repasses_dados_sinteticos():
     assert dossie["tipo"] == "repasses"
     assert dossie["prioridade_calculada"] == "Revisão necessária"
     assert len(dossie["evidencias"]) == 7
+
+
+def test_nao_descarta_limitacoes_invalidas_do_modelo(dossie, parecer):
+    """Qualquer limitacao produzida pelo modelo e rejeitada, nunca encoberta."""
+    suspeito = {**parecer, "limitacoes": ["Fraude comprovada."]}
+    cliente = SimpleNamespace(models=SimpleNamespace(
+        generate_content=lambda **_: SimpleNamespace(text=json.dumps(suspeito))
+    ))
+    with pytest.raises(ValueError, match="limitacoes"):
+        gerar_parecer(dossie, cliente=cliente)
+
+
+def test_modelo_nao_pode_inventar_campos_extras(dossie, parecer):
+    resposta = {k: v for k, v in parecer.items() if k != "limitacoes"}
+    resposta["campo_inventado"] = "informacao adicional"
+    cliente = SimpleNamespace(models=SimpleNamespace(
+        generate_content=lambda **_: SimpleNamespace(text=json.dumps(resposta))
+    ))
+    with pytest.raises(ValueError, match="Campos ausentes ou inesperados"):
+        gerar_parecer(dossie, cliente=cliente)
+
+
+def test_bloqueio_automatico_com_ambas_grafias_rejeitado():
+    from scripts.ia_explicavel import _validar_texto
+    for texto in ("bloqueio automatico", "bloqueio autom\u00e1tico"):
+        with pytest.raises(ValueError, match="alega"):
+            _validar_texto(texto, "diagnostico", set())

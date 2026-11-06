@@ -2,52 +2,55 @@
 
 # Financial Intelligence AI — Finanças & Automação
 
-## Estado atual — MVP offline V1.5.1 (02/11/2026)
+## Estado atual — V1.6 | Gemini Integration (06/11/2026)
 
-**Status:** correções de segurança e integridade implementadas e verificadas na suíte automatizada local. Versão ainda não publicada; integração real com API e hospedagem privada pendentes.
+**Status:** MVP demonstrado **localmente** no Streamlit, com integracao real a API Gemini. A hospedagem externa nao foi realizada. O repositorio e um projeto independente de portfolio, sem dados ou integracao com sistemas internos do iFood.
 
-### Funcionalidades
+### Funcionalidades demonstradas
 
-- Conciliação financeira de pedidos sintéticos com SQLite e Pandas.
-- Dashboard Streamlit com filtros, indicadores, gráficos e exportação CSV.
-- Simulador determinístico de inadimplência 30+ e 90+.
-- Estrutura de IA explicável com evidências e revisão humana obrigatória.
-- Demonstração offline de pareceres **escritos manualmente** para crédito e repasses.
-- Exportação JSON condicionada à aprovação humana, vinculada ao dossiê, ao parecer e ao revisor.
-- Hashes SHA-256 para identificação e detecção de mudanças; **não constituem assinatura digital autenticada nem registro inviolável**.
+- Conciliacao financeira de pedidos sinteticos: SQLite, Pandas, indicadores e dashboard Streamlit.
+- Simulador deterministico de credito com cenarios hipoteticos de inadimplencia 30+/90+.
+- Geracao de pareceres descritivos com Gemini sobre dossies resumidos de evidencias calculadas pelo Python.
+- Saida JSON estruturada e verificacoes de prioridade, referencias de evidencia e regras de consistencia textual. Respostas invalidas sao rejeitadas; o validador nao garante veracidade semantica completa.
+- Limitacoes padronizadas pelo Python e rejeicao de campos inesperados na resposta do modelo.
+- Revisao humana obrigatoria para aprovacao demonstrativa; a autorizacao e invalidada na sessao quando a confirmacao, o revisor, o dossie ou o parecer mudam.
+- Exportacao de JSON com hashes SHA-256. Os hashes detectam alteracoes em relacao aos valores registrados, mas nao sao assinatura digital autenticada, registro inviolavel ou controle de acesso persistente.
+- Demonstracao offline com pareceres manuais, separada da geracao real por IA.
 
-### Melhorias da V1.5.1
+### Evidencias de validacao (06/11/2026)
 
-1. **Aprovação humana:** verificação da confirmação, identidade do revisor e integridade do parecer e do dossiê antes de permitir exportação.
-2. **Integridade financeira:** validação de entradas monetárias e coerência de indicadores e evidências dos dossiês.
-3. **Consistência semântica:** regras determinísticas para rejeitar determinadas afirmações contraditórias sobre aumento ou queda de inadimplência. A cobertura é parcial e não garante veracidade universal.
+- **88 testes automatizados aprovados** na ultima execucao local informada pelo autor.
+- Geracao real de pareceres de credito e de conciliacao de repasses observada no Streamlit.
+- Exportacao JSON conferida: status, identificacao do revisor, hashes e marcacao de revisao obrigatoria.
+- Testes locais de revogacao logica da aprovacao e verificacao visual do estado de aprovado/nao aprovado.
+- Um erro intermitente de renderizacao React (`removeChild`) foi observado no perfil habitual do Chrome; nao apareceu nas ultimas capturas em janela anonima. A causa definitiva nao foi estabelecida.
 
-### Qualidade e testes
+**Limites:** somente dados sinteticos. A IA descreve resultados calculados pelo Python, nao executa operacoes financeiras, nao decide credito, nao comprova causalidade, nao substitui revisao humana e nao esta preparada para producao. O projeto nao foi implantado publicamente.
 
-Em 02/11/2026, a suíte completa executada localmente no Windows apresentou **83 testes aprovados, 0 falhas e 0 XFAIL**, em **5,76 segundos**. `git diff --cached --check` não apresentou erros.
+### Instalar e executar no Windows
 
-Os testes cobrem os casos implementados, mas **não certificam segurança de produção**, nem substituem revisão humana, testes de integração com API ou testes de implantação.
-
-### Limites da versão
-
-O projeto utiliza dados sintéticos e é independente do iFood; não usa dados ou sistemas internos da empresa.
-
-Os pareceres da demonstração offline são exemplos manuais, **não respostas produzidas por um modelo de IA**. A chamada à API OpenAI existe no código, mas sua operação real ainda não foi validada com sucesso. A hospedagem privada permanece pendente.
-
-O sistema não executa decisões financeiras automaticamente. As verificações semânticas são limitadas a padrões reconhecidos, e os hashes não substituem autenticação, autorização persistente ou auditoria imutável. O MVP não deve ser tratado como sistema financeiro de produção.
-
-### Executar localmente
+Na raiz do repositorio, com Python 3.13:
 
 ```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-mvp.txt
 .\.venv\Scripts\python.exe -m pytest -q
+```
+
+Crie sua propria chave no [Google AI Studio](https://aistudio.google.com/api-keys), salve-a como variavel de usuario `GEMINI_API_KEY` no Windows e **nunca a inclua no codigo, em commits ou em capturas**. Em uma sessao existente do PowerShell, se necessario, carregue a variavel ja salva:
+
+```powershell
+$env:GEMINI_API_KEY = [Environment]::GetEnvironmentVariable("GEMINI_API_KEY", "User")
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-As seções seguintes preservam o **histórico técnico** das etapas SQL e Python. Situações e metas antigas refletem o momento em que foram registradas e não substituem o estado atual da V1.5.1 acima.
+O modelo padrao da integracao e `gemini-3.1-flash-lite`, configuravel pela variavel `GEMINI_MODEL`. A disponibilidade dos modelos e as cotas da API dependem da conta e podem mudar. Gerar pareceres reais pode consumir cota ou gerar custos conforme o plano e as configuracoes do projeto.
 
-Projeto independente de portfólio, desenvolvido com exercícios progressivos em SQL, Python e SQLite. Objetivo futuro: aplicar IA a análises financeiras e à automação de relatórios.
+Se a chave nao estiver configurada, a demonstracao offline continua disponivel. O banco e os exemplos sao locais e sinteticos; recriar o banco pode substituir a tabela de demonstracao existente.
 
-> **Transparência:** base inteiramente **sintética**, sem dados internos ou vínculo de desenvolvimento com o iFood. Há estrutura de integração com API, mas **nenhuma execução real de IA generativa foi validada**; os pareceres offline são manuais. Os resultados são simulações, não resultados de produção.
+### Historico tecnico
+
+As secoes seguintes documentam exercicios e etapas anteriores (SQL, Python e MVP offline). Quando apresentarem prazos, testes e funcionalidades como "pendentes", trate esses trechos como **registros historicos**, nao como status atualizado da V1.6.
 
 ## Progresso — Dia 1
 
@@ -204,7 +207,7 @@ docs/diario_de_bordo.md
 .gitignore
 ```
 
-## Próximas etapas
+## Próximas etapas (registro histórico anterior à V1.6)
 
 **Formação inicial de SQL concluída; Python 01, 02, 03 e 04 aprovados e publicados.** O **dashboard Streamlit e o simulador de crédito funcionam localmente**, sem hospedagem remota. Próxima entrega: **Python 05 — integração e avaliação de IA generativa explicável**, com dados sintéticos, validação das saídas e revisão humana. **IA generativa e implantação privada ainda não foram implementadas.** Para uso profissional, ampliar testes de borda (inclusive ausência total de divergências), padronizar arredondamento por pedido e substituir valores esperados fixos por validações adequadas ao dataset em produção.
 
