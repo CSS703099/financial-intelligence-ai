@@ -21,6 +21,15 @@ from scripts.ia_explicavel import (
 from scripts.simulador_credito import simular_cenario
 
 
+
+def mensagem_publica_erro_api(erro: Exception) -> str:
+    """Mensagem segura para a interface, sem o conteudo bruto do erro da API."""
+    codigo = getattr(erro, "code", None)
+    if type(codigo) is int and 400 <= codigo <= 599:
+        return f"Falha na API de IA (HTTP {codigo}). Verifique a configuracao e a conectividade."
+    return "Falha na API de IA. Verifique a configuracao e a conectividade."
+
+
 def renderizar_ia():
     st.subheader("IA generativa — parecer financeiro com evidências")
     st.caption("Somente dados sintéticos. Geração mediante clique; a IA não calcula os números nem executa decisões.")
@@ -69,13 +78,7 @@ def renderizar_ia():
             if isinstance(erro, ValueError):
                 st.error(f"Parecer rejeitado pelo validador: {erro}")
             else:
-                detalhe = str(erro)
-                chave = os.environ.get("GEMINI_API_KEY")
-                if chave:
-                    detalhe = detalhe.replace(chave, "[CHAVE OCULTA]")
-                codigo_http = getattr(erro, "code", "desconhecido")
-                st.error(f"Falha na API: {type(erro).__name__} (HTTP {codigo_http})")
-                st.code(detalhe[:1000])
+                st.error(mensagem_publica_erro_api(erro))
             st.caption("Confirme conectividade, saldo de API e modelo; se persistir, revise o log local.")
 
     atual = st.session_state.get("ia_parecer")
