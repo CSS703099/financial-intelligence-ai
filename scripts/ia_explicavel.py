@@ -255,7 +255,7 @@ def validar_parecer(parecer: dict, dossie: dict) -> dict:
     for i, acao in enumerate(parecer["acoes"]):
         if not isinstance(acao, dict) or set(acao) != CHAVES_ACAO:
             raise ValueError("Estrutura da ação incorreta.")
-        _validar_texto(acao["acao"], f"Ação {i}")
+        _validar_texto(acao["acao"], f"Ação {i}", ids_validos)
         refs_validas(acao["evidencias_ids"], f"Ação {i}")
     for i, item in enumerate(parecer["limitacoes"]):
         _validar_texto(item, f"Limitação {i}")
