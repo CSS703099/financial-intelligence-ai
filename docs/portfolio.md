@@ -24,7 +24,7 @@ Construo projetos para investigar problemas financeiros e operacionais, combinan
 
 **Implementação:** Python, Google ADK, Gemini e API do Trello; listagem, criação e movimentação por identificador.
 
-**Evidência:** [registro de validação com Gemini e quadro real de laboratório](https://github.com/CSS703099/agente-trello-gemini/blob/main/evidencias/validacao.md), além de cinco testes locais documentados.
+**Evidência:** [registro de validação com Gemini e quadro real de laboratório](https://github.com/CSS703099/agente-trello-gemini/blob/main/evidencias/validacao.md), além de [cinco testes aprovados no GitHub Actions](https://github.com/CSS703099/agente-trello-gemini/actions/runs/43984766106) com quadro simulado.
 
 **Estado:** protótipo integrado. A confirmação é solicitada por instruções conversacionais; ainda não existe aprovação obrigatória validada na camada de ferramentas.
 
@@ -36,7 +36,7 @@ Construo projetos para investigar problemas financeiros e operacionais, combinan
 
 **Implementação:** JavaScript, SDK MCP e validação de argumentos; transporte em memória no navegador e servidor STDIO. A seleção de ferramentas usa regras, sem LLM integrado.
 
-**Evidência:** consultas documentadas sobre quatro contas e 21 movimentações fictícias em USD; testes de consultas, STDIO e roteamento no repositório.
+**Evidência:** consultas documentadas sobre quatro contas e 21 movimentações fictícias em USD; [três testes de consultas, STDIO e roteamento aprovados e build concluído](https://github.com/CSS703099/banco-na-viagem-mcp/actions/runs/43984769681) no GitHub Actions.
 
 [Demo](https://banco-na-viagem-caio.caio-loguslog.chatgpt.site/) · [Código](https://github.com/CSS703099/banco-na-viagem-mcp)
 
